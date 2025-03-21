@@ -1,0 +1,65 @@
+.cardContainer{
+    background: var(--card-bg, #F8FCF9);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding:40px 27px;
+    width: 300px;
+    height: 500px;
+    border-radius: 16px;
+    border: 1px solid var(--border-card, #E0E8E0);
+    cursor: pointer;
+}
+.cardContainer:hover{
+    scale: 103%;
+}
+.subcontainer{
+    width: 246px;
+    height: 310px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.appointmentButton{
+    padding: 20px 48px;
+    font-size: 15px;
+    border: 1px solid var(--border-button, #DEDEDE);
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.appointmentButton:hover{
+    background-color: #2f6540;
+    color: white;
+}
+
+.appointmentButton:active{
+    background-color: #1c4a2a;
+    color: white;
+}
+
+.name{
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.specialisation{
+    padding: 10px;
+}
+.subcontainer > p , .specialisation span{
+    color: var(--secondary-fontcolor);
+    font-weight: 500;
+}
+.specialisation > p{
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+
+
+

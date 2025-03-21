@@ -1,0 +1,83 @@
+.parent{
+    padding: 24px 96px;
+}
+.heading{
+    font-size: 32px;
+    text-align: center;
+}
+.hero{
+   display: flex;
+   flex-direction: column;
+   gap: 40px;
+
+}
+.searchSection{
+    position: relative;
+    border-radius: 10px;
+}
+.searchSection>input{
+    padding: 24px 48px;
+    font-size: 16px;
+    width: 90%;
+    border:2px solid #374957;
+    border-radius: 10px 0 0 10px;
+    outline: none;
+}
+.searchSection > button{
+    font-size: 16px;
+    width: 10%;
+    padding: 24px;
+    background-color: var(--primary-fontcolor);
+    color: white;
+    border:2px solid var(--primary-fontcolor);
+    outline: none;
+    border-radius: 0 10px 10px 0;
+    cursor:pointer;
+}
+
+.doctorsSection{
+    padding: 120px 0 44px;
+}
+
+.subheading{
+    font-size: 16px;
+    text-align: center;
+    color: var(--secondary-fontcolor);
+    margin-top:16px
+}
+
+.doctorList{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.sidebar{
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+}
+
+.sidebar > aside{
+    width: 25%;
+}
+.sidebar > div{
+    width: 75%;
+}
+
+
+.sidebar > aside {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.details{
+    display: flex;
+    justify-content: space-between;
+}
+.details > span:nth-child(2){
+    color: var(--primary-fontcolor);
+    font-weight: 700;
+    cursor: pointer;
+}

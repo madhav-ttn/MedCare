@@ -1,0 +1,104 @@
+.container{
+    display: flex;
+    height: 840px;
+}
+.leftsection{
+    background-color: var(--primary-fontcolor);
+    width: 50%;
+    padding: 48px;
+}
+.leftsection>div{
+        width: 585px;
+        margin:70px auto;
+}
+.leftsection >  div > p:nth-child(1){
+    font-size: 60px;
+    line-height: 1.5;
+    color: white;
+}
+.leftsection > div > p:nth-child(2){
+    font-size: 18px;
+    margin-top: 16px;
+    color: #FFFFFFB2;
+}
+.rightsection{
+    width: 100%;
+    background-image: url("schedule.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.modal{
+    background: #FFFFFF;
+    padding:35px 20px;
+    width: 655px;
+    margin:22px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+.header{
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+.header > p{
+    font-size: 22px;
+    font-family: 400;
+}
+.header > button{
+    padding: 10px 28px;
+    font-weight: 500;
+    background-color: var(--primary-fontcolor);
+    color: white;
+    font-size: 14px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.booking{
+    display: flex;
+    width: 100%;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid #F4D7D0;
+    border-radius: 8px;
+}
+.modal > p {
+   width: 100%;
+   border: 1px solid #D3D4DB;
+   padding: 8px 16px;
+   font-size: 14px;
+   font-weight: 500;
+   border-radius: 6px;
+}
+.booking > button:first-child{
+    padding: 16px;
+    text-align: center;
+    width: 50%;
+    color:white;
+    border-radius: 6px 0 0 6px;
+    background-color: var(--primary-fontcolor);
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+.booking > button:nth-child(2){
+    padding: 16px;
+    width: 50%;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 0 6px 6px 0;
+    text-align: center;
+}
+.modal > button{
+    background-color: var(--primary-fontcolor);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}

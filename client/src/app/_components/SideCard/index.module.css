@@ -1,0 +1,18 @@
+.card{
+    background: #FBFBFB;
+    border: 1px solid #E0E8E0;
+    border-radius: 16px;
+    padding:20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+.card  input[type="radio"]{
+    accent-color: var(--primary-fontcolor);
+}
+.item{
+    display: flex;
+    gap:8px;
+}

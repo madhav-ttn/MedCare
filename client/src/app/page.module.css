@@ -1,0 +1,37 @@
+.banner{
+  background-color: var(--primary-fontcolor);
+  display: flex;
+}
+.leftsection{
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   gap: 16px;
+   color: white;
+   font-size: 18px;
+   width: 72%;
+   padding: 50px;
+}
+.innerContent{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: flex-start;
+}
+.startButton{
+  padding: 20px 48px;
+  color: var(--primary-fontcolor);
+  border-radius: 10px;
+  width: 200px;
+  margin-top: 32px;
+  font-weight: 500;
+  font-size: 16px;
+}
+.heading{
+   font-size: 60px;
+}
+.rightsection{
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
