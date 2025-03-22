@@ -13,16 +13,13 @@ export default function Header(){
                 <nav className={styles.navlinks}>
                     <Link href={"/"}>Home</Link>
                     <Link href={"/appointments"}>Appointments</Link>
-                    <Link href={"/"}>Health Blog</Link>
-                    <Link href={"/"}>Reviews</Link>
+                    <Link href={"/blogs"}>Health Blog</Link>
+                    <Link href={"/reviews"}>Reviews</Link>
                 </nav>
             </div>
             <div className={styles.buttonContainer}>
                 <Link className={styles.buttons} href={"/login"}>Login</Link>
                 <Link className={styles.buttons} href={"/signup"}>Register</Link>
-            </div>
-            <div>
-                
             </div>
         </header>
     )
