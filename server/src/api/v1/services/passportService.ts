@@ -1,12 +1,12 @@
 import passport from "passport";
 import { Strategy as jwtStrategy} from "passport-jwt";
 import config from "../config/passport";
-import { checkExistingUser } from "./userService";
+import authModel from "../models/authModel";
 
 
 passport.use(new jwtStrategy(config,async(jwt_payload,done)=>{
        try {
-          const response=await checkExistingUser(jwt_payload.email);
+          const response=await authModel.findUserByEmail(jwt_payload.email);
           if(!response?.success){
              return done(null,false);
           }
