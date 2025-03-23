@@ -7,7 +7,7 @@ export default function Schedule(){
             <div className={styles.leftsection}>
                 <div>
                     <p>Book Your Next Doctor Visit in Seconds.</p>
-                    <p>CareMate helps you find the best healthcare provider by specialty, location, and more, ensuring you get the care you need.</p>
+                    <p>CareMate helps you find the best healthcare provider by speciality, location, and more, ensuring you get the care you need.</p>
                 </div>
             </div>
             <div className={styles.rightsection}>
