@@ -5,6 +5,7 @@ import { Montserrat } from 'next/font/google';
 import "./globals.css";
 import Providers from "./providers";
 import { getSession } from "../lib/auth";
+import { ToastContainer } from "react-toastify";
 
 
 const montserrat = Montserrat({
@@ -30,11 +31,12 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={montserrat.className}>
-        <Providers session={session}>
-          <Header/>
-            {children}
-          <Footer/>
-        </Providers>
+          <Providers session={session}>
+            <Header/>
+              {children}
+            <ToastContainer/>
+            <Footer/>
+          </Providers>
       </body>
     </html>
   );

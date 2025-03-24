@@ -1,10 +1,15 @@
 import dotenv from "dotenv";
 import express from "express";
 import apiRoutes from "./api/index";
+import cors from "cors";
 import pool from "./api/v1/config/db";
 const app=express();
 dotenv.config();
 
+
+app.use(cors({
+    origin:"*"
+}))
 app.use(express.json());
 app.use("/api",apiRoutes);
 
