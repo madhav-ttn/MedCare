@@ -4,9 +4,11 @@ import styles from "./page.module.css";
 import Form from "next/form";
 import Image from "next/image";
 import axios from "axios";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+
 export default function Signup() {
   const nameRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
@@ -16,6 +18,12 @@ export default function Signup() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (Cookies.get("user")) {
+      router.replace("/");
+    }
+  }, []);
 
   const handleReset = () => {
     if (nameRef && nameRef.current) nameRef.current.value = "";
