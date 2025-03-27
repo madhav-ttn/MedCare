@@ -56,14 +56,6 @@
     margin-top: 16px;
     padding: 0 10px;
   }
-  
-  .doctorList {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    justify-content: center;
-  }
-  
   .sidebar {
     padding: 20px 0;
     display: flex;
@@ -177,9 +169,5 @@
     
     .doctorsSection {
       padding: 40px 0 20px;
-    }
-    
-    .doctorList > div {
-      width: 100%;
     }
   }

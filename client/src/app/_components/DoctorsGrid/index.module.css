@@ -1,0 +1,12 @@
+.doctorList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+}
+
+@media (max-width: 576px) { 
+    .doctorList > div {
+      width: 100%;
+    }
+  }
