@@ -1,10 +1,16 @@
 import Image from "next/image";
 import styles from "./index.module.css";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Doctor } from "@/lib/types/types";
 
-export default function DoctorCards({ doctor }: any) {
+export default function DoctorCards({ doctor }: { doctor: Doctor }) {
+  const router = useRouter();
+  const handleCardClick = () => {
+    router.push(`appointments/${doctor.id}`);
+  };
   return (
-    <div className={styles.cardContainer}>
+    <div onClick={handleCardClick} className={styles.cardContainer}>
       <div className={styles.subcontainer}>
         <Image src={"/Doctor.svg"} alt="" width={150} height={150} />
         <div className={styles.details}>

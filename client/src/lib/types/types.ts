@@ -1,5 +1,3 @@
-import { RefObject } from "react";
-
 export interface SideCardProps {
   title: string;
   data: string[];
@@ -16,4 +14,15 @@ export interface Doctor {
   location: string;
   gender: string;
   disease?: string[];
+}
+
+export interface Slot {
+  id: number;
+  doctor_id: number;
+  date: Date;
+  start_time: string;
+  end_time: string;
+  is_available: boolean;
+  doctor_name: string;
+  location: string;
 }

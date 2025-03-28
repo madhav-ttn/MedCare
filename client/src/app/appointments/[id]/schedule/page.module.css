@@ -1,104 +1,211 @@
-.container{
+.container {
     display: flex;
-    height: 840px;
+    min-height: 100vh;
+    flex-direction: column;
 }
-.leftsection{
+
+@media (min-width: 1024px) {
+    .container {
+        flex-direction: row;
+        height: 100vh;
+    }
+}
+
+.leftsection {
     background-color: var(--primary-fontcolor);
-    width: 50%;
-    padding: 48px;
+    width: 100%;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.leftsection>div{
-        width: 585px;
-        margin:70px auto;
+
+@media (min-width: 1024px) {
+    .leftsection {
+        width: 50%;
+        padding: 3rem;
+    }
 }
-.leftsection >  div > p:nth-child(1){
-    font-size: 60px;
+
+.leftsection > div {
+    width: 100%;
+    max-width: 585px;
+    margin: 0 auto;
+}
+
+.leftsection > div > p:nth-child(1) {
+    font-size: 2.5rem;
     line-height: 1.5;
     color: white;
+    text-align: center;
 }
-.leftsection > div > p:nth-child(2){
-    font-size: 18px;
-    margin-top: 16px;
+
+@media (min-width: 1024px) {
+    .leftsection > div > p:nth-child(1) {
+        font-size: 3.75rem;
+        text-align: left;
+    }
+}
+
+.leftsection > div > p:nth-child(2) {
+    font-size: 1rem;
+    margin-top: 1rem;
     color: #FFFFFFB2;
+    text-align: center;
 }
-.rightsection{
+
+@media (min-width: 1024px) {
+    .leftsection > div > p:nth-child(2) {
+        text-align: left;
+    }
+}
+
+.rightsection {
     width: 100%;
     background-image: url("schedule.svg");
     background-repeat: no-repeat;
     background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
 }
-.modal{
+
+@media (min-width: 1024px) {
+    .rightsection {
+        width: 50%;
+    }
+}
+
+.modal {
     background: #FFFFFF;
-    padding:35px 20px;
-    width: 655px;
-    margin:22px auto;
+    padding: 2rem 1.25rem;
+    width: 100%;
+    max-width: 655px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-.header{
+
+.header {
    display: flex;
+   flex-direction: column;
    align-items: center;
-   justify-content: space-between;
+   justify-content: center;
+   gap: 1rem;
+   text-align: center;
 }
-.header > p{
-    font-size: 22px;
-    font-family: 400;
+
+@media (min-width: 640px) {
+    .header {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+    }
 }
-.header > button{
-    padding: 10px 28px;
+
+.header > p {
+    font-size: 1.375rem;
+    font-weight: 400;
+}
+
+.header > button {
+    padding: 0.625rem 1.75rem;
     font-weight: 500;
     background-color: var(--primary-fontcolor);
     color: white;
-    font-size: 14px;
+    font-size: 0.875rem;
     border-radius: 10px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.booking{
+.header > button:hover {
+    opacity: 0.9;
+}
+
+.booking {
     display: flex;
     width: 100%;
-    font-size: 13px;
+    font-size: 0.8125rem;
     font-weight: 500;
     border: 1px solid #F4D7D0;
     border-radius: 8px;
 }
+
 .modal > p {
    width: 100%;
    border: 1px solid #D3D4DB;
-   padding: 8px 16px;
-   font-size: 14px;
+   padding: 0.5rem 1rem;
+   font-size: 0.875rem;
    font-weight: 500;
    border-radius: 6px;
 }
-.booking > button:first-child{
-    padding: 16px;
+
+.booking > button:first-child {
+    padding: 1rem;
     text-align: center;
     width: 50%;
-    color:white;
+    color: white;
     border-radius: 6px 0 0 6px;
     background-color: var(--primary-fontcolor);
     outline: none;
     border: none;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
-.booking > button:nth-child(2){
-    padding: 16px;
+
+.booking > button:nth-child(2) {
+    padding: 1rem;
     width: 50%;
     outline: none;
     border: none;
     cursor: pointer;
     border-radius: 0 6px 6px 0;
     text-align: center;
+    transition: background-color 0.3s ease;
 }
-.modal > button{
+
+.booking > button:nth-child(2):hover {
+    background-color: #f0f0f0;
+}
+
+.modal > button {
     background-color: var(--primary-fontcolor);
     color: white;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 700;
-    padding: 12px;
+    padding: 0.75rem;
     border-radius: 8px;
     border: none;
     outline: none;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal > button:hover {
+    opacity: 0.9;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 640px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .leftsection,
+    .rightsection {
+        width: 100%;
+    }
+
+    .leftsection > div > p:nth-child(1) {
+        font-size: 2rem;
+    }
+
+    .modal {
+        margin: 1rem;
+        padding: 1.5rem 1rem;
+    }
 }

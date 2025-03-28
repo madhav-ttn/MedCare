@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import doctorModel from "../models/doctorModel";
 import { doctorService } from "../services/doctorService";
+
 const router = express.Router();
 
 router.get(
@@ -105,7 +106,7 @@ router.get(
           .status(400)
           .json({ success: false, message: result.message });
       }
-      return res.status(200).json({ success: true, data: result.data });
+      return res.status(200).json({ success: true, doctor: result.data });
     } catch (error) {
       console.log("Error in fetching the doctor", error);
       return res.status(500).json({ message: "Error in fetching" });

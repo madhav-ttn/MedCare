@@ -1,0 +1,91 @@
+.dateSelector {
+    width: 100%;
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+  }
+  
+  .dateNavigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .monthDisplay {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .navigationButton {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #666;
+    cursor: pointer;
+    padding: 4px 8px;
+  }
+  
+  .dateGrid {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  
+  .dateCell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    border-radius: 8px;
+    width: calc(100% / 7);
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .dateCell:hover:not(.disabled) {
+    background-color: #f0f0f0;
+  }
+  
+  .dayOfWeek {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 4px;
+  }
+  
+  .dateNumber {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .today {
+    border-color: var(--primary-fontcolor);
+    background-color: rgba(0, 128, 0, 0.1);
+  }
+  
+  .selected {
+    background-color: var(--primary-fontcolor);
+    color: white;
+  }
+  
+  .selected .dayOfWeek {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+  @media (max-width: 768px) {
+    .dateGrid {
+      flex-wrap: wrap;
+    }
+    
+    .dateCell {
+      width: calc(100% / 4);
+    }
+  }
