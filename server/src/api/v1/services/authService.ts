@@ -53,11 +53,20 @@ const authService = {
       if (!token) {
         throw new Error("Unable to get jwt token");
       }
-      return {
-        success: true,
-        token: token,
-        message: "Login Successfull",
-      };
+      const decodedAdminValue = jwt.decode(token);
+      if (role === "admin") {
+        return {
+          success: true,
+          token: token,
+          message: "Login Successfull",
+          admin: decodedAdminValue,
+        };
+      } else
+        return {
+          success: true,
+          token: token,
+          message: "Login Successfull",
+        };
     } catch (error) {
       console.log("Error in auth service", error);
       return {

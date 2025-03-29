@@ -3,6 +3,8 @@
   grid-template-columns: 1fr;
   gap: 1.5rem;
   height: 100vh;
+  overflow: scroll;
+  scrollbar-width: none;
   padding: 4rem;
 }
 

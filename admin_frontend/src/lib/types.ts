@@ -1,3 +1,5 @@
+import { JwtPayload } from "jsonwebtoken";
+
 export type Appointment = {
   id: string;
   patient: string;
@@ -35,4 +37,11 @@ export interface CreateDoctorModalProps {
 export interface DoctorCardProps {
   doctor: Doctor;
   onClick: () => void;
+}
+
+export interface jwtPayload extends JwtPayload {
+  email: string;
+  id: number;
+  name: string;
+  role: string;
 }

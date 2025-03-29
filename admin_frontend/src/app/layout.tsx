@@ -2,10 +2,9 @@ import type { Metadata } from "next";
 import Footer from "@/app/_components/Footer";
 import { Montserrat } from "next/font/google";
 import { ToastContainer } from "react-toastify";
-import AppointmentProvider from "@/context/appointment/provider";
-import DoctorProvider from "@/context/doctor/provider";
 import "./globals.css";
 import Header from "./_components/Header";
+import UserProvider from "@/context/Auth/Provider";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -28,14 +27,12 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={montserrat.className}>
-        <DoctorProvider>
-          <AppointmentProvider>
-            <Header />
-            {children}
-            <Footer />
-            <ToastContainer />
-          </AppointmentProvider>
-        </DoctorProvider>
+        <UserProvider>
+          <Header />
+          {children}
+          <Footer />
+          <ToastContainer />
+        </UserProvider>
       </body>
     </html>
   );

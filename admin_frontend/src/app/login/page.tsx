@@ -1,13 +1,16 @@
 "use client";
-import React, { FormEvent } from "react";
+import React, { FormEvent, useContext } from "react";
 import styles from "./page.module.css";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { authContext } from "@/context/Auth/authContext";
 
 export default function AdminLogin() {
   const router = useRouter();
+
+  const { handleAuth } = useContext(authContext);
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -22,10 +25,10 @@ export default function AdminLogin() {
       if (!res.data.success) {
         throw new Error("Error in logging the admin");
       }
-      console.log(res.data);
       toast.success("Welcome Back");
-      router.push("/dashboard");
       Cookies.set("user", res.data.token);
+      handleAuth(res.data.admin);
+      router.push("/");
     } catch (e) {
       console.log("Error in logging the admin", e);
       toast.error("Something went wrong");

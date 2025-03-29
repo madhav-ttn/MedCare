@@ -4,10 +4,15 @@ import styles from "./page.module.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Appointment } from "@/lib/types";
-
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-
+  const router = useRouter();
+  useEffect(() => {
+    const token = Cookies.get("user");
+    if (!token) router.replace("/login");
+  }, []);
   useEffect(() => {
     async function getData() {
       try {

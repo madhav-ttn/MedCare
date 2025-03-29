@@ -1,16 +1,21 @@
 "use client";
 import Link from "next/link";
 import styles from "./page.module.css";
-import { useContext, useEffect } from "react";
-import { doctorContext } from "@/context/doctor/doctorContext";
-import { appointmentContext } from "@/context/appointment/appContext";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import { Appointment } from "@/lib/types";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 export default function Dashboard() {
-  const { doctors, doctorSetter } = useContext(doctorContext);
-  const { appointments, appointmentSetter } = useContext(appointmentContext);
+  const [doctors, setDoctors] = useState([]);
+  const [appointments, setAppointments] = useState([]);
+  const router = useRouter();
 
+  useEffect(() => {
+    const token = Cookies.get("user");
+    if (!token) router.replace("/login");
+  }, []);
   useEffect(() => {
     async function getAppointmentsandDoctors() {
       try {
@@ -24,10 +29,10 @@ export default function Dashboard() {
           throw new Error("Error in fetching the data");
         }
         if (doctorResponse.data.doctors) {
-          doctorSetter(doctorResponse.data.doctors);
+          setDoctors(doctorResponse.data.doctors);
         }
         if (appointmentResponse.data.appointments) {
-          appointmentSetter(appointmentResponse.data.appointments);
+          setAppointments(appointmentResponse.data.appointments);
         }
       } catch (error) {
         console.log("Error in getting the doctors and appointments", error);
@@ -37,18 +42,15 @@ export default function Dashboard() {
     getAppointmentsandDoctors();
   }, []);
 
-  console.log(appointments);
   const dashboardStats = {
     totalDoctors: doctors.length,
     totalAppointments: appointments.length,
-    pendingAppointments: appointments.length,
+    pendingAppointments: appointments.filter(
+      (app: Appointment) => app.status === "pending"
+    ).length,
   };
 
-  const recentAppointments = [
-    { name: "Emma Watson", doctor: "Dr. Smith", date: "2024-03-15" },
-    { name: "John Doe", doctor: "Dr. Johnson", date: "2024-03-16" },
-    { name: "Alice Brown", doctor: "Dr. Williams", date: "2024-03-17" },
-  ];
+  const recentAppointments = appointments.slice(0, 3) || [];
 
   return (
     <div className={styles.dashboardGrid}>
@@ -70,7 +72,10 @@ export default function Dashboard() {
               <path d="M16 3.13a4 4 0 0 1 0 7.75" />
             </svg>
           </div>
-          <div className={styles.statContent}>
+          <div
+            className={styles.statContent}
+            onClick={() => router.push("/doctors")}
+          >
             <div className={styles.statLabel}>Total Doctors</div>
             <div className={styles["statValue-doctors"]}>
               {dashboardStats.totalDoctors}
@@ -78,7 +83,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Appointments Card */}
         <div className={styles.statCard}>
           <div className={styles["statIconWrapper-appointments"]}>
             <svg
@@ -96,16 +100,19 @@ export default function Dashboard() {
               <line x1="3" x2="21" y1="10" y2="10" />
             </svg>
           </div>
-          <div className={styles.statContent}>
+          <Link href={"/appointments"} className={styles.statContent}>
             <div className={styles.statLabel}>Total Appointments</div>
             <div className={styles["statValue-appointments"]}>
               {dashboardStats.totalAppointments}
             </div>
-          </div>
+          </Link>
         </div>
 
         <div className={styles.statCard}>
-          <div className={styles["statIconWrapper-pending"]}>
+          <Link
+            href={"/appointments"}
+            className={styles["statIconWrapper-pending"]}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -118,13 +125,13 @@ export default function Dashboard() {
               <circle cx="12" cy="12" r="10" />
               <polyline points="12 6 12 12 16 14" />
             </svg>
-          </div>
-          <div className={styles.statContent}>
+          </Link>
+          <Link href={"/appointments"} className={styles.statContent}>
             <div className={styles.statLabel}>Pending Appointments</div>
             <div className={styles["statValue-pending"]}>
               {dashboardStats.pendingAppointments}
             </div>
-          </div>
+          </Link>
         </div>
       </div>
 
@@ -132,21 +139,25 @@ export default function Dashboard() {
         <div className={styles.cardSection}>
           <h2 className={styles.cardTitle}>Recent Appointments</h2>
           <div className={styles.appointmentList}>
-            {recentAppointments.map((appointment, index) => (
-              <div key={index} className={styles.appointmentItem}>
-                <div className={styles.appointmentDetails}>
-                  <span className={styles.appointmentName}>
-                    {appointment.name}
-                  </span>
-                  <span className={styles.appointmentDoctor}>
-                    {appointment.doctor}
+            {recentAppointments.length !== 0 ? (
+              recentAppointments.map((appointment: Appointment, index) => (
+                <div key={index} className={styles.appointmentItem}>
+                  <div className={styles.appointmentDetails}>
+                    <span className={styles.appointmentName}>
+                      {appointment.patient}
+                    </span>
+                    <span className={styles.appointmentDoctor}>
+                      {appointment.doctor}
+                    </span>
+                  </div>
+                  <span className={styles.appointmentDate}>
+                    {appointment.date}
                   </span>
                 </div>
-                <span className={styles.appointmentDate}>
-                  {appointment.date}
-                </span>
-              </div>
-            ))}
+              ))
+            ) : (
+              <h3>No recent appointments</h3>
+            )}
           </div>
         </div>
 
@@ -154,7 +165,7 @@ export default function Dashboard() {
           <h2 className={styles.cardTitle}>Quick Actions</h2>
           <div className={styles.quickActionsGrid}>
             <Link
-              href="/doctors/create"
+              href="/doctors"
               className={styles["quickActionButton-doctors"]}
             >
               <div className={styles.quickActionIcon}>

@@ -7,7 +7,9 @@ import DoctorCard from "@/app/_components/DoctorCard";
 import UpdateDoctorModal from "@/app/_components/UpdateDoctorModal";
 import { Doctor } from "@/lib/types";
 import { toast } from "react-toastify";
-import CreateDoctorModal from "../CreateDoctorModel";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import CreateDoctorModal from "../_components/CreateDoctorModel";
 
 export default function DoctorsPage() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -17,6 +19,11 @@ export default function DoctorsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
+  const router = useRouter();
+  useEffect(() => {
+    const token = Cookies.get("user");
+    if (!token) router.replace("/login");
+  }, []);
   useEffect(() => {
     async function fetchDoctors() {
       try {

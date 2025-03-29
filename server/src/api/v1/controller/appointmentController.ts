@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import appointmentModel from "../models/appointmentModel";
+import { emailService } from "../services/emailService";
 const router = express.Router();
 
 router.get("/", async (req: Request, res: Response): Promise<any> => {
@@ -114,7 +115,7 @@ router.put(
   async (req: Request, res: Response): Promise<any> => {
     try {
       const { appointment_id } = req.params;
-      const { status } = req.body;
+      const { status, patientEmail, patientName, appointmentDate } = req.body;
       const parsedAppointmentId = parseInt(appointment_id);
       if (
         parsedAppointmentId == null ||
@@ -132,9 +133,13 @@ router.put(
       if (!response.success) {
         return res.status(400).json({
           success: false,
-          message: "Erro in updating your appointment",
+          message: "Error in updating your appointment",
         });
       }
+      if (!(patientEmail || patientName || appointmentDate || status)) {
+        throw new Error("Email inputs are empty");
+      }
+      await emailService(patientEmail, patientName, appointmentDate, status);
       return res
         .status(200)
         .json({ success: true, updatedValue: response.data });
