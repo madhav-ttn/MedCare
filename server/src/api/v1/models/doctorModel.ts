@@ -14,6 +14,7 @@ const doctorModel = {
         gender,
         disease,
       } = doctor;
+      console.log(name, disease, speciality, location);
       const res = await pool.query(
         "INSERT INTO doctors(name,speciality,experience,photo_url,rating,location,gender,disease) values($1,$2,$3,$4,$5,$6,$7,$8) returning *",
         [
@@ -200,13 +201,35 @@ const doctorModel = {
     }
   },
 
+  deleteOne: async (id: number) => {
+    try {
+      if (!id) {
+        return {
+          success: false,
+          message: "No doctor found",
+        };
+      }
+      await pool.query("delete from doctors where id=$1", [id]);
+      return { success: true, message: "Doctors's Profile has been Deleted" };
+    } catch (error) {
+      console.log("Error in deleting doctor > doctorModel", error);
+      return {
+        success: false,
+        message: "Error in deleting doctor's profile",
+      };
+    }
+  },
+
   updateDoctor: async (id: number, updatedValues: Partial<Doctor>) => {
     try {
-      console.log(updatedValues);
+      const uval = {
+        ...updatedValues,
+        disease: JSON.stringify(updatedValues.disease),
+      };
       const fields = Object.keys(updatedValues)
         .map((key, index) => `${key} = $${index + 2}`)
         .join(", ");
-      const values = Object.values(updatedValues);
+      const values = Object.values(uval);
       const result = await pool.query(
         `UPDATE doctors SET ${fields} WHERE id = $1 RETURNING *`,
         [id, ...values]

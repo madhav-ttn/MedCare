@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Footer from "@/app/_components/Footer";
 import { Montserrat } from "next/font/google";
 import { ToastContainer } from "react-toastify";
+import AppointmentProvider from "@/context/appointment/provider";
+import DoctorProvider from "@/context/doctor/provider";
 import "./globals.css";
 import Header from "./_components/Header";
 
@@ -26,10 +28,14 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={montserrat.className}>
-        <Header />
-        {children}
-        <Footer />
-        <ToastContainer />
+        <DoctorProvider>
+          <AppointmentProvider>
+            <Header />
+            {children}
+            <Footer />
+            <ToastContainer />
+          </AppointmentProvider>
+        </DoctorProvider>
       </body>
     </html>
   );

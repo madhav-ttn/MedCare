@@ -89,6 +89,7 @@ export default function Schedule() {
           doctor_slot_id: selectedSlot,
           appointment_date: selectedDate,
           type: appointmentType,
+          status: "pending",
         }
       );
       if (!res.data.success) {

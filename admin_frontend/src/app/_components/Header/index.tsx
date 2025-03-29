@@ -30,10 +30,7 @@ export default function Header() {
   return (
     <header className={styles.container}>
       <div className={styles.subcontainer}>
-        <div
-          className={styles.titleContainer}
-          onClick={() => router.push("/dashboard")}
-        >
+        <div className={styles.titleContainer} onClick={() => router.push("/")}>
           <Image src="/logo.svg" alt="medcare-logo" width={36} height={36} />
           <p className={styles.title}>MedCare</p>
         </div>

@@ -1,38 +1,78 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
-
-// Simulated appointment data type
-type Appointment = {
-  id: string;
-  patientName: string;
-  doctorName: string;
-  date: string;
-  time: string;
-  status: "pending" | "approved" | "declined";
-};
+import axios from "axios";
+import { toast } from "react-toastify";
+import { Appointment } from "@/lib/types";
 
 export default function AppointmentsPage() {
-  // TODO: Replace with actual data fetching
-  const appointments: Appointment[] = [
-    {
-      id: "1",
-      patientName: "Emma Watson",
-      doctorName: "Dr. Smith",
-      date: "2024-03-15",
-      time: "10:30 AM",
-      status: "pending",
-    },
-    // More appointments...
-  ];
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
 
+  useEffect(() => {
+    async function getData() {
+      try {
+        const appointmentResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments`
+        );
+        if (appointmentResponse.data.success) {
+          setAppointments(appointmentResponse.data.appointments);
+        }
+      } catch (error) {
+        console.log("Error in getting appointments", error);
+        toast.error("Something went wrong");
+      }
+    }
+    getData();
+  }, []);
   const handleAppointmentAction = async (
     id: string,
-    action: "approve" | "decline"
+    action: "approve" | "decline" | "delete"
   ) => {
-    // TODO: Implement appointment status update
-    // 1. Update appointment status in database
-    // 2. Send email notification using Nodemailer
+    try {
+      if (action === "delete") {
+        const response = await axios.delete(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments/${id}`
+        );
+        if (response.data.success) {
+          setAppointments((prevAppointments) =>
+            prevAppointments.filter(
+              (appointment: Appointment) => appointment.id !== id
+            )
+          );
+
+          toast.success("Appointment deleted successfully");
+        }
+      } else {
+        const response = await axios.put(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments/${id}`,
+          {
+            status: action === "approve" ? "approved" : "declined",
+          }
+        );
+
+        if (response.data.success) {
+          setAppointments((prevAppointments) =>
+            prevAppointments.map((appointment: Appointment) =>
+              appointment.id === id
+                ? {
+                    ...appointment,
+                    status: action === "approve" ? "approved" : "declined",
+                  }
+                : appointment
+            )
+          );
+
+          toast.success(
+            `Appointment ${
+              action === "approve" ? "approved" : "declined"
+            } successfully`
+          );
+        }
+      }
+    } catch (error) {
+      console.error(`Error ${action}ing appointment:`, error);
+      toast.error(`Failed to ${action} appointment. Please try again.`);
+    }
   };
 
   return (
@@ -48,33 +88,49 @@ export default function AppointmentsPage() {
           <div>Status</div>
           <div>Actions</div>
         </div>
-        {appointments.map((appointment) => (
+        {appointments.map((appointment: Appointment) => (
           <div key={appointment.id} className={styles.tableRow}>
-            <div>{appointment.patientName}</div>
-            <div>{appointment.doctorName}</div>
-            <div>{appointment.date}</div>
-            <div>{appointment.time}</div>
-            <div>In Person</div>
+            <div>{appointment.patient}</div>
+            <div>{appointment.doctor}</div>
+            <div>{appointment.date.split("T")[0]}</div>
+            <div>
+              {appointment.time.slice(0, 5)}{" "}
+              {parseInt(appointment.time.slice(0, 2)) >= 12 ? "PM" : "AM"}
+            </div>
+            <div>{appointment.type}</div>
             <div className={styles[`status-${appointment.status}`]}>
               {appointment.status}
             </div>
             <div className={styles.actionButtons}>
-              <button
-                onClick={() =>
-                  handleAppointmentAction(appointment.id, "approve")
-                }
-                className={styles.approveButton}
-              >
-                Approve
-              </button>
-              <button
-                onClick={() =>
-                  handleAppointmentAction(appointment.id, "decline")
-                }
-                className={styles.declineButton}
-              >
-                Decline
-              </button>
+              {appointment.status ? (
+                <button
+                  onClick={() =>
+                    handleAppointmentAction(appointment.id, "delete")
+                  }
+                  className={styles.declineButton}
+                >
+                  Delete
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() =>
+                      handleAppointmentAction(appointment.id, "approve")
+                    }
+                    className={styles.approveButton}
+                  >
+                    Approve
+                  </button>
+                  <button
+                    onClick={() =>
+                      handleAppointmentAction(appointment.id, "decline")
+                    }
+                    className={styles.declineButton}
+                  >
+                    Decline
+                  </button>
+                </>
+              )}
             </div>
           </div>
         ))}

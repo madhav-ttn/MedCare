@@ -29,7 +29,9 @@ const appointmentModel = {
   },
   getAllAppointments: async () => {
     try {
-      const result = await pool.query("SELECT * from appointments");
+      const result = await pool.query(
+        "SELECT ap.id as id,ap.status as status,us.name as Patient, doc.name as Doctor, ds.date as Date,ds.start_time as Time,ap.type as Type from appointments as ap JOIN users as us on ap.patient_id = us.id JOIN doctors as doc on ap.doctor_id=doc.id JOIN doctor_slots as ds on ap.doctor_slot_id=ds.id"
+      );
       return {
         success: true,
         data: result.rows,

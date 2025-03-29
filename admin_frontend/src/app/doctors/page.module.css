@@ -1,0 +1,66 @@
+.doctorsContainer {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 72vh;
+    overflow-y:scroll;
+    scrollbar-width: none; 
+}
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+    color: var(--primary-fontcolor);
+    margin: 0;
+  }
+  
+  .addButton {
+    background-color: var(--primary-fontcolor);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .addButton:hover {
+    background-color: #1b5e20;
+  }
+  
+  .doctorsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .noResults {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+    color: #666;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+  }
+  
+  @media (max-width: 768px) {
+    .doctorsGrid {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  }

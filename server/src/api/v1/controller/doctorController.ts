@@ -90,22 +90,6 @@ router.get(
   }
 );
 
-// router.get("/:id",async(req:Request,res:Response):Promise<any>=>{
-//      try {
-//       const pageNumber=req.params;
-
-//       // const result=
-//       return res
-//       .status(200)
-//       .json({ success: true, data:  });
-//      } catch (error) {
-//       console.log("Error in filtering doctors", error);
-//       return res
-//       .status(500)
-//       .json({ success: false, message: "Error in getting curr page doctors" });
-//      }
-// });
-
 router.get(
   "/doctorProfile/:id",
   async (req: Request, res: Response): Promise<any> => {
@@ -204,4 +188,26 @@ router.put(
     }
   }
 );
+
+router.delete("/:id", async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { id } = req.params;
+    const parsedId = parseInt(id);
+    if (parsedId == null || parsedId == undefined || isNaN(parsedId)) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No  doctor found" });
+    }
+    const result = await doctorModel.deleteOne(parsedId);
+    if (!result.success) {
+      return res.status(400).json({ success: false, message: result.message });
+    }
+    return res.status(200).json({ success: true, message: result.message });
+  } catch (error) {
+    console.log("Error in deleting the doctor", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+});
 export default router;

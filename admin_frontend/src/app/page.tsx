@@ -1,21 +1,47 @@
+"use client";
 import Link from "next/link";
 import styles from "./page.module.css";
+import { useContext, useEffect } from "react";
+import { doctorContext } from "@/context/doctor/doctorContext";
+import { appointmentContext } from "@/context/appointment/appContext";
 import axios from "axios";
+import { toast } from "react-toastify";
 
-export default async function DashboardHome() {
-  const doctors = await axios.get("http://localhost:8000/api/v1/doctors");
-  const appointments = await axios.get(
-    `http://localhost:8000/api/v1/appointments`
-  );
-  console.log(doctors.data.doctors.length);
-  console.log(appointments.data.appointments);
+export default function Dashboard() {
+  const { doctors, doctorSetter } = useContext(doctorContext);
+  const { appointments, appointmentSetter } = useContext(appointmentContext);
+
+  useEffect(() => {
+    async function getAppointmentsandDoctors() {
+      try {
+        const doctorResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors`
+        );
+        const appointmentResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments`
+        );
+        if (!doctorResponse.data.success || !appointmentResponse.data.success) {
+          throw new Error("Error in fetching the data");
+        }
+        if (doctorResponse.data.doctors) {
+          doctorSetter(doctorResponse.data.doctors);
+        }
+        if (appointmentResponse.data.appointments) {
+          appointmentSetter(appointmentResponse.data.appointments);
+        }
+      } catch (error) {
+        console.log("Error in getting the doctors and appointments", error);
+        toast.error("Something went wrong");
+      }
+    }
+    getAppointmentsandDoctors();
+  }, []);
+
+  console.log(appointments);
   const dashboardStats = {
-    totalDoctors: doctors.data.doctors.length || 53,
-    totalAppointments: appointments.data.appointments.length,
-    //@ts-ignore
-    pendingAppointments: appointments.data.appointments.filter(
-      (app: any) => app.status === null
-    ).length,
+    totalDoctors: doctors.length,
+    totalAppointments: appointments.length,
+    pendingAppointments: appointments.length,
   };
 
   const recentAppointments = [
