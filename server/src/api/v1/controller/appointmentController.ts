@@ -2,6 +2,21 @@ import express, { Request, Response } from "express";
 import appointmentModel from "../models/appointmentModel";
 const router = express.Router();
 
+router.get("/", async (req: Request, res: Response): Promise<any> => {
+  try {
+    const result = await appointmentModel.getAllAppointments();
+    if (!result.success) {
+      return res.status(400).json({ success: false, message: result.message });
+    }
+    return res.status(200).json({ success: true, appointments: result.data });
+  } catch (error) {
+    console.log("Error in appointment controller", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error in fetching the appointments",
+    });
+  }
+});
 router.get(
   "/patient/:patient_id",
   async (req: Request, res: Response): Promise<any> => {

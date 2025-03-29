@@ -4,6 +4,23 @@ import { doctorService } from "../services/doctorService";
 
 const router = express.Router();
 
+router.get("/", async (req: Request, res: Response): Promise<any> => {
+  try {
+    const response = await doctorModel.getAllDoctors();
+    if (!response.success) {
+      return res
+        .status(400)
+        .json({ success: false, message: response.message });
+    }
+
+    return res.status(200).json({ success: true, doctors: response.data });
+  } catch (error) {
+    console.log("Error in filtering doctors", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Error in getting filtered doctors" });
+  }
+});
 router.get(
   "/filter/:currentPage",
   async (req: Request, res: Response): Promise<any> => {
@@ -125,7 +142,7 @@ router.post("/", async (req: Request, res: Response): Promise<any> => {
       location,
       gender,
       disease,
-    } = req.body;
+    } = req.body.doctor_details;
     const result = await doctorModel.createOne({
       name,
       speciality,

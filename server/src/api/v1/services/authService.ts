@@ -30,7 +30,7 @@ const authService = {
   },
   login: async (email: string, password: string, role?: string) => {
     try {
-      const response = await authModel.findUserByEmail(email);
+      const response = await authModel.findUserByEmail(email, role);
       if (!response?.success) {
         return { success: false, message: "No user Found" };
       }

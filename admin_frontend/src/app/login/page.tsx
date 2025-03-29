@@ -1,17 +1,34 @@
-import React from "react";
+"use client";
+import React, { FormEvent } from "react";
 import styles from "./page.module.css";
-import { redirect } from "next/navigation";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 export default function AdminLogin() {
-  const handleLogin = async (formData: FormData) => {
-    "use server";
-    const email = formData.get("email");
-    const password = formData.get("password");
-
-    if (email === "admin@medcare.com" && password === "adminpassword") {
-      redirect("/dashboard");
-    } else {
-      return { error: "Invalid credentials" };
+  const router = useRouter();
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/admin/login`,
+        {
+          email: formData.get("email"),
+          password: formData.get("password"),
+        }
+      );
+      if (!res.data.success) {
+        throw new Error("Error in logging the admin");
+      }
+      console.log(res.data);
+      toast.success("Welcome Back");
+      router.push("/dashboard");
+      Cookies.set("user", res.data.token);
+    } catch (e) {
+      console.log("Error in logging the admin", e);
+      toast.error("Something went wrong");
     }
   };
 
@@ -22,7 +39,7 @@ export default function AdminLogin() {
           <img src="/logo.svg" alt="MedCare Logo" className={styles.logo} />
           <h1>MedCare</h1>
         </div>
-        <form className={styles.loginForm}>
+        <form onSubmit={handleLogin} className={styles.loginForm}>
           <div className={styles.formGroup}>
             <label htmlFor="email" className={styles.label}>
               Email

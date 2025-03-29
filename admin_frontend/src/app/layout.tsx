@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Footer from "@/app/_components/Footer";
 import { Montserrat } from "next/font/google";
+import { ToastContainer } from "react-toastify";
 import "./globals.css";
+import Header from "./_components/Header";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -24,8 +26,10 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={montserrat.className}>
+        <Header />
         {children}
         <Footer />
+        <ToastContainer />
       </body>
     </html>
   );

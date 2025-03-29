@@ -27,6 +27,21 @@ const appointmentModel = {
       };
     }
   },
+  getAllAppointments: async () => {
+    try {
+      const result = await pool.query("SELECT * from appointments");
+      return {
+        success: true,
+        data: result.rows,
+      };
+    } catch (error) {
+      console.log("Error in Getting Appointments ", error);
+      return {
+        success: false,
+        message: "Getting Appointments Query Failed",
+      };
+    }
+  },
   getAppointmentsByDoctor: async (doctor_id: number) => {
     try {
       const result = await pool.query(
