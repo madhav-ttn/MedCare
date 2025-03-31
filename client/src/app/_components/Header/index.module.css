@@ -1,50 +1,174 @@
-.container{
+.container {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding:36px 60px;
+    padding: 36px 60px;
     box-shadow: 0px 3px 15px 0px #0000001A;
-}
-.subcontainer{
+    position: relative;
+  }
+  
+  .subcontainer {
     display: flex;
     align-items: center;
-    gap:48px
-}
-.titleContainer{
+    gap: 48px;
+  }
+  
+  .titleContainer {
     display: flex;
     align-items: center;
-    gap:10px
-}
-.navlinks{
+    gap: 10px;
+  }
+  
+  .title {
+    font-size: 28px;
+    color: var(--primary-fontcolor);
+  }
+  
+  .desktopNav {
     display: flex;
-    gap:40px;
-    color:var(--secondary-fontcolor)
-}
-
-.title{
-   font-size: 28px;
-   color: var(--primary-fontcolor)
-}
-
-.buttonContainer{
+    gap: 40px;
+    color: var(--secondary-fontcolor);
+  }
+  
+  .buttonContainer {
     display: flex;
-    gap:10px;
-}
-.buttons{
+    gap: 10px;
+  }
+  
+  .buttons {
     padding: 12px 32px;
     border-radius: 8px;
-    border:1px solid #E0E8E0;
-}
-
-.buttons:nth-child(2){
+    border: 1px solid #E0E8E0;
+  }
+  
+  .buttons:nth-child(2) {
     background-color: var(--primary-fontcolor);
-    color:#fff
-}
+    color: #fff;
+  }
+  
+  .logoutButton {
+    padding: 12px 32px;
+    border-radius: 8px;
+    border: 1px solid #E0E8E0;
+    background-color: var(--primary-fontcolor);
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .hamburgerButton {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary-fontcolor);
+  }
+  
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+  }
+  
+  .sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 280px;
+    background-color: white;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    overflow-y: auto;
+  }
+  
+  .sidebarHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 40px;
+  }
+  
+  .closeButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary-fontcolor);
+  }
+  
+  .sidebarNav {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  
+  .sidebarNav a {
+    font-size: 18px;
+    padding: 8px 0;
+  }
+  
+  .sidebarAuth {
+    margin-top: auto;
+  }
+  
+  .sidebarButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .sidebarButtons a {
+    width: 100%;
+    text-align: center;
+  }
+  
 
-
-
-/* @media screen and (max-width:1280px) {
-    .navlinks,.buttonContainer{
-        display: none;
+  
+  @media screen and (max-width: 1024px) {
+    .container {
+      padding: 20px 24px;
     }
-} */
+    
+    .title {
+      font-size: 24px;
+    }
+    
+    .desktopNav,
+    .desktopAuth {
+      display: none;
+    }
+    
+    .hamburgerButton {
+      display: block;
+    }
+    
+    .overlay {
+      display: block;
+    }
+    
+    .subcontainer {
+      gap: 16px;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .container {
+      padding: 16px 20px;
+    }
+    
+    .title {
+      font-size: 20px;
+    }
+    
+    .sidebar {
+      width: 260px;
+    }
+  }

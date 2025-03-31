@@ -32,3 +32,52 @@ a {
   text-decoration: none;
 }
 
+.loginButton{
+  padding: 12px 32px;
+  border-radius: 8px;
+  border:1px solid #E0E8E0;
+  font-weight: 500;
+  color:var(--secondary-fontcolor)
+}
+
+.registerButton{
+  padding: 12px 32px;
+  border-radius: 8px;
+  border:1px solid #E0E8E0;
+  background-color: var(--primary-fontcolor);
+  color:#fff;
+  cursor: pointer;
+}
+
+.startButton{
+  padding: 20px 48px;
+  color: var(--primary-fontcolor);
+  background-color: white;
+  border-radius: 10px;
+  width: 200px;
+  margin-top: 32px;
+  font-weight: 500;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.appointmentButton{
+  padding: 20px 48px;
+  font-size: 15px;
+  border: 1px solid var(--border-button, #DEDEDE);
+  border-radius: 10px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.appointmentButton:hover{
+  background-color: #2f6540;
+  color: white;
+}
+
+.appointmentButton:active{
+  background-color: #1c4a2a;
+  color: white;
+}

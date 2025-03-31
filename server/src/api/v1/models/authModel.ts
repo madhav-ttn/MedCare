@@ -4,10 +4,11 @@ const authModel = {
   findUserByEmail: async (email: string, role?: string) => {
     try {
       let query = `SELECT * from users where email = $1`;
-      if (role !== undefined || role !== null || role !== "") {
+      let result = null;
+      if (role !== undefined && role !== null && role !== "") {
         query += ` AND role=$2`;
-      }
-      const result = await pool.query(query, [email, role]);
+        result = await pool.query(query, [email, role]);
+      } else result = await pool.query(query, [email]);
 
       if (!result.rowCount) {
         return {

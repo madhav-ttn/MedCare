@@ -4,6 +4,7 @@ import styles from "./index.module.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { CreateDoctorModalProps, Doctor } from "@/lib/types";
+import Cookies from "js-cookie";
 
 export default function CreateDoctorModal({
   handleAdd,
@@ -11,6 +12,7 @@ export default function CreateDoctorModal({
 }: CreateDoctorModalProps) {
   const [isLoading, setisLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>("");
+  const token = Cookies.get("user");
 
   const handleCreateDoctor = async (formData: FormData) => {
     try {
@@ -28,9 +30,17 @@ export default function CreateDoctorModal({
         gender: formData.get("gender"),
       };
       const res: { data: { data: Doctor; success: boolean } } =
-        await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors`, {
-          doctor_details: doctor_details,
-        });
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors`,
+          {
+            doctor_details: doctor_details,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
       if (!res.data.success) {
         throw new Error("Error in creating doctor");
       }
@@ -61,6 +71,7 @@ export default function CreateDoctorModal({
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
         }
       );

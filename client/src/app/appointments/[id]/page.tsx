@@ -15,19 +15,28 @@ import {
   Users,
 } from "lucide-react";
 import { Doctor } from "@/lib/types/types";
+import Loader from "@/app/_components/Loader";
+import Cookies from "js-cookie";
 import axios from "axios";
 
 export default function DoctorProfile() {
   const router = useRouter();
   const [doctor, setDoctor] = useState<Doctor>();
   const path = usePathname();
+  const token = Cookies.get("user");
+
   useEffect(() => {
     async function getDoctorData() {
       try {
         const id = path.split("/").pop();
         const res: { data: { success: boolean; doctor: Doctor } } =
           await axios.get(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors/doctorProfile/${id}`
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors/doctorProfile/${id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
           );
         if (!res.data.success) {
           throw new Error("Error in getting doctor's Profile");
@@ -42,8 +51,8 @@ export default function DoctorProfile() {
 
   if (!doctor) {
     return (
-      <div>
-        <h1>Something went wrong.</h1>
+      <div className={styles.onloadingDiv}>
+        <Loader />
       </div>
     );
   }

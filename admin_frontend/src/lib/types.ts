@@ -1,9 +1,11 @@
 import { JwtPayload } from "jsonwebtoken";
 
 export type Appointment = {
-  id: string;
+  id: number;
   patient: string;
   doctor: string;
+  doctor_id: number;
+  slot_id: number;
   date: string;
   time: string;
   type: string;

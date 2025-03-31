@@ -29,7 +29,7 @@
     border: 2px solid #374957;
     border-radius: 10px 0 0 10px;
     outline: none;
-    min-width: 0; /* Prevents flex items from overflowing */
+    min-width: 0; 
   }
   
   .searchSection > button {
@@ -91,7 +91,6 @@
     cursor: pointer;
   }
   
-  /* Media Queries for Responsive Design */
   
   @media (max-width: 992px) {
     .parent {
@@ -117,7 +116,7 @@
   
   @media (max-width: 768px) {
     .sidebar {
-      flex-direction: column;
+      flex-direction: column-reverse;
       gap: 30px;
     }
     

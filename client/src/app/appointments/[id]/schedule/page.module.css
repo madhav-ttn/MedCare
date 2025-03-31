@@ -8,6 +8,7 @@
     .container {
         flex-direction: row;
         height: 100vh;
+        overflow: hidden;
     }
 }
 
@@ -65,15 +66,19 @@
     background-image: url("schedule.svg");
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 1rem;
+    position: relative; 
 }
 
 @media (min-width: 1024px) {
     .rightsection {
         width: 50%;
+        overflow-y: hidden;
+        height: 100vh;
     }
 }
 
@@ -87,6 +92,16 @@
     gap: 1.5rem;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1; /* Ensure modal stays above background */
+}
+
+@media (min-width: 1024px) {
+    .modal {
+        margin: 2rem auto; 
+        max-height: calc(100vh - 4rem);
+        overflow-y: auto;
+        scrollbar-width: none; 
+    }
 }
 
 .header {
@@ -118,6 +133,8 @@
     color: white;
     font-size: 0.875rem;
     border-radius: 10px;
+    border:none;
+    outline: none;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -135,7 +152,7 @@
     border-radius: 8px;
 }
 
-.modal > p {
+.locationInfo {
    width: 100%;
    border: 1px solid #D3D4DB;
    padding: 0.5rem 1rem;
@@ -144,31 +161,53 @@
    border-radius: 6px;
 }
 
-.booking > button:first-child {
+.success {
+   background-color: #e6f7e9;
+   border-color: #c2e6c9;
+   color: #2e7d32;
+   position: relative;
+   padding-left: 2.25rem;
+}
+
+.success::before {
+   content: "✓";
+   position: absolute;
+   left: 0.75rem;
+   color: #2e7d32;
+   font-weight: bold;
+}
+
+.booking > button {
     padding: 1rem;
     text-align: center;
     width: 50%;
-    color: white;
-    border-radius: 6px 0 0 6px;
-    background-color: var(--primary-fontcolor);
     outline: none;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+
+.booking > button:first-child {
+    border-radius: 6px 0 0 6px;
 }
 
 .booking > button:nth-child(2) {
-    padding: 1rem;
-    width: 50%;
-    outline: none;
-    border: none;
-    cursor: pointer;
     border-radius: 0 6px 6px 0;
-    text-align: center;
-    transition: background-color 0.3s ease;
 }
 
-.booking > button:nth-child(2):hover {
+/* Active button styles */
+.activeButton {
+    background-color: var(--primary-fontcolor) !important;
+    color: white !important;
+}
+
+/* Default button styles (when not active) */
+.booking > button:not(.activeButton) {
+    background-color: transparent;
+    color: #333;
+}
+
+.booking > button:not(.activeButton):hover {
     background-color: #f0f0f0;
 }
 

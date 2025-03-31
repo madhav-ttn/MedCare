@@ -1,21 +1,18 @@
 import type { Metadata } from "next";
 import Header from "@/app/_components/Header";
 import Footer from "@/app/_components/Footer";
-import { Montserrat } from 'next/font/google';
+import { Montserrat } from "next/font/google";
 import "./globals.css";
-import Providers from "./providers";
-import { getSession } from "../lib/auth";
+import UserProvider from "@/context/Auth/Provider";
 import { ToastContainer } from "react-toastify";
-
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
-  weight: ['300', '400', '500', '700'],
-  subsets: ['latin'],
-  display:'swap',
-  fallback: ['Arial', 'sans-serif'],
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  fallback: ["Arial", "sans-serif"],
 });
-
 
 export const metadata: Metadata = {
   title: "MedCare",
@@ -27,16 +24,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getSession()
   return (
     <html lang="en">
       <body className={montserrat.className}>
-          <Providers session={session}>
-            <Header/>
-              {children}
-            <ToastContainer/>
-            <Footer/>
-          </Providers>
+        <UserProvider>
+          <Header />
+          {children}
+          <ToastContainer />
+          <Footer />
+        </UserProvider>
       </body>
     </html>
   );

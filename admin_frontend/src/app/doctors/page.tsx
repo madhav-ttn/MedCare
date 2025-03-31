@@ -20,15 +20,20 @@ export default function DoctorsPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const router = useRouter();
+  const token = Cookies.get("user");
   useEffect(() => {
-    const token = Cookies.get("user");
     if (!token) router.replace("/login");
   }, []);
   useEffect(() => {
     async function fetchDoctors() {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (response.data.success) {
           setDoctors(response.data.doctors);
@@ -78,7 +83,12 @@ export default function DoctorsPage() {
   const handleDelete = async (id: number) => {
     try {
       const response = await axios.delete(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors/${id}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (!response.data.success) {
         throw new Error("Error in deleting doctor's profile");
@@ -98,7 +108,12 @@ export default function DoctorsPage() {
     try {
       const response = await axios.put(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors/doctorProfile/${updatedDoctor.id}`,
-        updatedDoctor
+        updatedDoctor,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (response.data.success) {

@@ -30,7 +30,7 @@ const appointmentModel = {
   getAllAppointments: async () => {
     try {
       const result = await pool.query(
-        "SELECT ap.id as id,ap.status as status,us.name as Patient, doc.name as Doctor, ds.date as Date,ds.start_time as Time,ap.type as Type from appointments as ap JOIN users as us on ap.patient_id = us.id JOIN doctors as doc on ap.doctor_id=doc.id JOIN doctor_slots as ds on ap.doctor_slot_id=ds.id"
+        "SELECT ap.id as id,ap.status as status,us.name as Patient,doc.id as doctor_id, doc.name as Doctor,ds.id as slot_id, ds.date as Date,ds.start_time as Time,ap.type as Type from appointments as ap JOIN users as us on ap.patient_id = us.id JOIN doctors as doc on ap.doctor_id=doc.id JOIN doctor_slots as ds on ap.doctor_slot_id=ds.id"
       );
       return {
         success: true,
@@ -81,12 +81,18 @@ const appointmentModel = {
   },
   updateAppointment: async (
     id: number,
+    parsedDoctorId: number,
+    parsedSlotId: number,
     status: "pending" | "declined" | "approved" | "completed"
   ) => {
     try {
       const result = await pool.query(
         "Update appointments set status=$2 where id=$1 returning *",
         [id, status]
+      );
+      await pool.query(
+        "Update doctor_slots set is_available=false where doctor_id=$1 and id=$2",
+        [parsedDoctorId, parsedSlotId]
       );
       return {
         success: true,

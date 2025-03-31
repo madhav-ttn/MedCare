@@ -32,7 +32,7 @@ const authService = {
     try {
       const response = await authModel.findUserByEmail(email, role);
       if (!response?.success) {
-        return { success: false, message: "No user Found" };
+        return { success: false, message: response?.message };
       }
       const isValidPassword = await bcrypt.compare(
         password,

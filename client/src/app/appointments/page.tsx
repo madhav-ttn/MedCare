@@ -8,7 +8,9 @@ import DoctorsGrid from "../_components/DoctorsGrid";
 import { Doctor } from "@/lib/types/types";
 import SearchBar from "../_components/SearchBar";
 import PaginationControl from "../_components/PaginationControl";
-
+import Loader from "../_components/Loader";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 export default function Appointments() {
   const [filterDetails, setFilterDetails] = useState({
     rating: "",
@@ -21,14 +23,27 @@ export default function Appointments() {
   const [filteredDoc, setFilteredDoc] = useState<Doctor[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalDoctors, setTotalDoctors] = useState<number>(0);
   const [currPageNumber, setCurrPageNumber] = useState<number>(1);
   const [currDocState, setcurrDocState] = useState({
     isFiltered: false,
     isSearched: false,
   });
-
+  const router = useRouter();
+  useEffect(() => {
+    setIsLoading(true);
+    const token = Cookies.get("user");
+    if (!token) router.push("/login");
+    setIsLoading(false);
+  }, []);
   const currPageSetter = (value: number) => {
     setCurrPageNumber(value);
+    setTimeout(() => {
+      window.scrollTo({
+        top: 300,
+        behavior: "smooth",
+      });
+    }, 100);
   };
 
   const searchQuerySetter = (query: string) => {
@@ -48,6 +63,7 @@ export default function Appointments() {
         const doc = result.data.doctors;
         setcurrDocState({ ...currDocState, isSearched: true });
         setTotalPages(Math.ceil(doc[0].total_records / 6));
+        setTotalDoctors(doc[0].total_records);
         setFilteredDoc(doc);
       }
     } catch (error) {
@@ -86,6 +102,7 @@ export default function Appointments() {
           const total_pages = Math.ceil(total_records / 6);
           setInitialPages(total_pages);
           setTotalPages(total_pages);
+          setTotalDoctors(total_records);
         }
         setIsLoading(false);
       } catch (error) {
@@ -184,18 +201,14 @@ export default function Appointments() {
         />
       </div>
       <div className={styles.doctorsSection}>
-        <p className={styles.heading}>
-          {currDocState.isFiltered || currDocState.isSearched
-            ? filteredDoc.length
-            : doctors.length}{" "}
-          doctors available
-        </p>
+        <p className={styles.heading}>{totalDoctors} doctors available</p>
         <p className={styles.subheading}>
           Book appointments with minimum wait-time & verified doctor details
         </p>
         <div className={styles.sidebar}>
           <aside>
             <div className={styles.details}>
+              {isLoading && <Loader />}
               <span>Filter By:</span>
               <span
                 onClick={currDocState.isFiltered ? handleReset : handleFilter}
@@ -229,26 +242,22 @@ export default function Appointments() {
               ref={genderCardRef}
             />
           </aside>
-          {isLoading ? (
-            "Loading top class doctors..."
-          ) : (
-            <>
-              <DoctorsGrid
-                doctors={
-                  currDocState.isFiltered || currDocState.isSearched
-                    ? filteredDoc
-                    : doctors
-                }
+          <>
+            <DoctorsGrid
+              doctors={
+                currDocState.isFiltered || currDocState.isSearched
+                  ? filteredDoc
+                  : doctors
+              }
+            />
+            {totalPages > 1 && (
+              <PaginationControl
+                totalPages={totalPages}
+                currPage={currPageNumber}
+                currPageSetter={currPageSetter}
               />
-              {totalPages > 1 && (
-                <PaginationControl
-                  totalPages={totalPages}
-                  currPage={currPageNumber}
-                  currPageSetter={currPageSetter}
-                />
-              )}
-            </>
-          )}
+            )}
+          </>
         </div>
       </div>
     </div>

@@ -9,7 +9,7 @@ import { authContext } from "@/context/Auth/authContext";
 
 export default function AdminLogin() {
   const router = useRouter();
-
+  const token = Cookies.get("user");
   const { handleAuth } = useContext(authContext);
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,6 +20,11 @@ export default function AdminLogin() {
         {
           email: formData.get("email"),
           password: formData.get("password"),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       if (!res.data.success) {

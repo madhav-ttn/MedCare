@@ -3,11 +3,26 @@ import styles from "./index.module.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Doctor } from "@/lib/types/types";
+import RedirectLink from "../RedirectLink";
 
 export default function DoctorCards({ doctor }: { doctor: Doctor }) {
   const router = useRouter();
   const handleCardClick = () => {
     router.push(`appointments/${doctor.id}`);
+  };
+  const ratingGenerator = (rating: number) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <span
+          key={i}
+          className={i <= rating ? styles.starFilled : styles.starEmpty}
+        >
+          ★
+        </span>
+      );
+    }
+    return stars;
   };
   return (
     <div onClick={handleCardClick} className={styles.cardContainer}>
@@ -26,7 +41,7 @@ export default function DoctorCards({ doctor }: { doctor: Doctor }) {
             </p>
           </div>
         </div>
-        <p>Ratings : {doctor.rating}</p>
+        {doctor.rating && <p>Ratings : {ratingGenerator(doctor.rating)}</p>}
       </div>
       <Link
         className={styles.appointmentButton}

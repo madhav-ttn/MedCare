@@ -9,15 +9,21 @@ import Cookies from "js-cookie";
 export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const router = useRouter();
+  const token = Cookies.get("user");
   useEffect(() => {
-    const token = Cookies.get("user");
     if (!token) router.replace("/login");
   }, []);
+
   useEffect(() => {
     async function getData() {
       try {
         const appointmentResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (appointmentResponse.data.success) {
           setAppointments(appointmentResponse.data.appointments);
@@ -29,14 +35,22 @@ export default function AppointmentsPage() {
     }
     getData();
   }, []);
+
   const handleAppointmentAction = async (
-    id: string,
+    id: number,
+    doctor_id: number,
+    slot_id: number,
     action: "approve" | "decline" | "delete"
   ) => {
     try {
       if (action === "delete") {
         const response = await axios.delete(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments/${id}`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (response.data.success) {
           setAppointments((prevAppointments) =>
@@ -52,6 +66,13 @@ export default function AppointmentsPage() {
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments/${id}`,
           {
             status: action === "approve" ? "approved" : "declined",
+            doctor_id: doctor_id,
+            slot_id: slot_id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
@@ -107,10 +128,16 @@ export default function AppointmentsPage() {
               {appointment.status}
             </div>
             <div className={styles.actionButtons}>
-              {appointment.status ? (
+              {appointment.status === "approved" ||
+              appointment.status === "declined" ? (
                 <button
                   onClick={() =>
-                    handleAppointmentAction(appointment.id, "delete")
+                    handleAppointmentAction(
+                      appointment.id,
+                      appointment.doctor_id,
+                      appointment.slot_id,
+                      "delete"
+                    )
                   }
                   className={styles.declineButton}
                 >
@@ -120,7 +147,12 @@ export default function AppointmentsPage() {
                 <>
                   <button
                     onClick={() =>
-                      handleAppointmentAction(appointment.id, "approve")
+                      handleAppointmentAction(
+                        appointment.id,
+                        appointment.doctor_id,
+                        appointment.slot_id,
+                        "approve"
+                      )
                     }
                     className={styles.approveButton}
                   >
@@ -128,7 +160,12 @@ export default function AppointmentsPage() {
                   </button>
                   <button
                     onClick={() =>
-                      handleAppointmentAction(appointment.id, "decline")
+                      handleAppointmentAction(
+                        appointment.id,
+                        appointment.doctor_id,
+                        appointment.slot_id,
+                        "decline"
+                      )
                     }
                     className={styles.declineButton}
                   >

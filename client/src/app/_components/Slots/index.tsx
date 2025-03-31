@@ -1,6 +1,6 @@
-import Image from "next/image";
 import styles from "./index.module.css";
 import { Slot } from "@/lib/types/types";
+
 export default function Slots({
   isMorning,
   slotData,
@@ -16,16 +16,11 @@ export default function Slots({
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.subheader}>
-          <Image
-            src={isMorning ? "/sun.svg" : "/sunset.svg"}
-            alt=""
-            width={24}
-            height={22}
-          />
-          {isMorning ? <p>Morning</p> : <p>Evening</p>}
+          <p>{isMorning ? "Morning" : "Evening"}</p>
         </div>
         <p>{slotData?.length} slots</p>
       </div>
+      <hr />
       <div className={styles.slotsection}>
         {slotData && slotData?.length !== 0 ? (
           slotData.map((slot: Slot, id: number) => (
@@ -33,12 +28,13 @@ export default function Slots({
               key={id}
               onClick={() => handleSlotSelection(slot.id)}
               disabled={slot.is_available === false}
+              className={selectedSlot === slot.id ? styles.selectedSlot : ""}
             >
               {slot.start_time.slice(0, 5)} {isMorning ? "AM" : "PM"}
             </button>
           ))
         ) : (
-          <h1>No Slots Exist for this date</h1>
+          <p>No Slots Exist for this date</p>
         )}
       </div>
     </div>

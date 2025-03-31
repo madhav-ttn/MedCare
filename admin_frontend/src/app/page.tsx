@@ -17,13 +17,24 @@ export default function Dashboard() {
     if (!token) router.replace("/login");
   }, []);
   useEffect(() => {
+    const token = Cookies.get("user");
     async function getAppointmentsandDoctors() {
       try {
         const doctorResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const appointmentResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments`
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (!doctorResponse.data.success || !appointmentResponse.data.success) {
           throw new Error("Error in fetching the data");

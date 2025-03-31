@@ -53,6 +53,7 @@ export default function Header() {
     handleAuth(null);
     Cookies.remove("user");
     router.refresh();
+    router.push("/login");
   };
 
   return (

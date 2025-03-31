@@ -7,6 +7,9 @@ import axios from "axios";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import Loader from "@/app/_components/Loader";
+import Cookies from "js-cookie";
+
 export default function Schedule() {
   const [appointmentType, setAppointmentType] = useState<
     "virtual" | "in_person"
@@ -15,6 +18,7 @@ export default function Schedule() {
   const [currDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
 
   const [slotData, setSlotData] = useState<{
     morningSlots: Slot[] | null;
@@ -27,10 +31,11 @@ export default function Schedule() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const path = usePathname();
-
+  const token = Cookies.get("user");
   useEffect(() => {
     async function getDoctorData() {
       try {
+        setIsLoading(true);
         const arr = path.split("/");
         const id = arr[arr.length - 2];
         if (!selectedDate) setSelectedDate(currDate);
@@ -39,7 +44,12 @@ export default function Schedule() {
           : currDate.toISOString().split("T")[0];
         const res: { data: { success: boolean; data: Slot[] } } =
           await axios.get(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/slots/${id}/${date}`
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/slots/${id}/${date}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
           );
         if (!res.data.success) {
           throw new Error("Error in getting doctor slots");
@@ -53,6 +63,7 @@ export default function Schedule() {
         );
         console.log(morningSlots);
         console.log(eveningSlots);
+        setIsLoading(false);
         setSlotData({ morningSlots, eveningSlots });
       } catch (error) {
         console.log("Error in getting doctor slots", error);
@@ -90,6 +101,11 @@ export default function Schedule() {
           appointment_date: selectedDate,
           type: appointmentType,
           status: "pending",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       if (!res.data.success) {
@@ -106,6 +122,14 @@ export default function Schedule() {
       console.log("Error in booking appointments", error);
     }
   };
+
+  if (isLoading)
+    return (
+      <div style={{ height: "100vh" }}>
+        <Loader />
+      </div>
+    );
+
   return (
     <div className={styles.container}>
       <div className={styles.leftsection}>
@@ -124,19 +148,34 @@ export default function Schedule() {
             <button>Book Appointment</button>
           </div>
           <div className={styles.booking}>
-            <button onClick={() => setAppointmentType("virtual")}>
+            <button
+              className={
+                appointmentType === "virtual" ? styles.activeButton : ""
+              }
+              onClick={() => setAppointmentType("virtual")}
+            >
               Book Video Consult
             </button>
-            <button onClick={() => setAppointmentType("in_person")}>
+            <button
+              className={
+                appointmentType === "in_person" ? styles.activeButton : ""
+              }
+              onClick={() => setAppointmentType("in_person")}
+            >
               Book Hospital Visit
             </button>
           </div>
-          {appointmentType === "in_person" && slotData && (
-            <p>
-              {slotData &&
-                slotData.morningSlots &&
-                slotData.morningSlots[0].location}
+          {slotData &&
+          appointmentType == "in_person" &&
+          slotData.morningSlots &&
+          slotData.morningSlots.length > 0 ? (
+            <p className={`${styles.locationInfo} ${styles.success}`}>
+              {slotData.morningSlots[0].location}
             </p>
+          ) : (
+            appointmentType == "in_person" && (
+              <p className={styles.locationInfo}>Slots does not exist</p>
+            )
           )}
           <DateSelector
             selectedDate={selectedDate}
@@ -155,7 +194,7 @@ export default function Schedule() {
             slotData={slotData.eveningSlots}
           />
           <button
-            disabled={isLoading === true}
+            disabled={isLoading}
             onClick={() => handleAppointmentBooking()}
           >
             {isLoading ? "Booking in Progress..." : "Next"}

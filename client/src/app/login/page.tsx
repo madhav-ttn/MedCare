@@ -42,16 +42,17 @@ export default function Login() {
         toast.info("Enter valid email");
         return;
       }
-      const res = await axios.post(
+      const res: any = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/login`,
         {
           email: email,
           password: password,
         }
       );
-      const userDetails = res.data;
-      if (userDetails) {
-        Cookies.set("user", JSON.stringify(userDetails), { expires: 1 });
+      const token = res.data.token as string;
+
+      if (token.startsWith("Bearer")) {
+        Cookies.set("user", token.split(" ")[1], { expires: 1 });
         toast.success("Login Successfull", {
           position: "top-right",
         });
@@ -61,7 +62,7 @@ export default function Login() {
       setIsLoading(false);
     } catch (error) {
       console.log("Error in login", error);
-      toast.error("Something went wrong", {
+      toast.error("Invalid Credentials", {
         position: "top-right",
       });
       setIsLoading(false);
