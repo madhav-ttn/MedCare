@@ -5,16 +5,18 @@ import Slots from "@/app/_components/Slots";
 import { Slot } from "@/lib/types/types";
 import axios from "axios";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Loader from "@/app/_components/Loader";
 import Cookies from "js-cookie";
+import { authContext } from "@/context/Auth/authContext";
 
 export default function Schedule() {
   const [appointmentType, setAppointmentType] = useState<
     "virtual" | "in_person"
   >("virtual");
 
+  const { user, handleAuth } = useContext(authContext);
   const [currDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -96,7 +98,7 @@ export default function Schedule() {
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments`,
         {
           doctor_id: slotData.morningSlots[0].doctor_id,
-          patient_id: 4,
+          patient_id: user?.id,
           doctor_slot_id: selectedSlot,
           appointment_date: selectedDate,
           type: appointmentType,

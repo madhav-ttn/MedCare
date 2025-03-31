@@ -65,7 +65,7 @@ const appointmentModel = {
   getAppointmentsByPatient: async (patient_id: number) => {
     try {
       const result = await pool.query(
-        "SELECT * from appointments INNER JOIN users on appointments.patient_id=users.id INNER JOIN doctor_slots on appointments.doctor_slot_id=doctor_slots.id where appointments.patient_id=$1",
+        "SELECT users.name as patient , doc.name as doctor,appointments.*,doctor_slots.* from appointments INNER JOIN users on appointments.patient_id=users.id INNER JOIN doctor_slots on appointments.doctor_slot_id=doctor_slots.id JOIN doctors as doc on doc.id =appointments.doctor_id where appointments.patient_id=$1",
         [patient_id]
       );
       return {

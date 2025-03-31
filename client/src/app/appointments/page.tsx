@@ -30,9 +30,9 @@ export default function Appointments() {
     isSearched: false,
   });
   const router = useRouter();
+  const token = Cookies.get("user");
   useEffect(() => {
     setIsLoading(true);
-    const token = Cookies.get("user");
     if (!token) router.push("/login");
     setIsLoading(false);
   }, []);
@@ -58,7 +58,11 @@ export default function Appointments() {
     try {
       const filterUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors/filter/${currPageNumber}?rating=${filterDetails.rating}&experience=${filterDetails.experience}&gender=${filterDetails.gender}&searchQuery=${searchQuery}`;
 
-      const result: any = await axios.get(filterUrl);
+      const result: any = await axios.get(filterUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (result.data) {
         const doc = result.data.doctors;
         setcurrDocState({ ...currDocState, isSearched: true });
@@ -84,11 +88,20 @@ export default function Appointments() {
 
         if (hasActiveFilters) {
           const filterUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors/filter/${currPageNumber}?rating=${filterDetails.rating}&experience=${filterDetails.experience}&gender=${filterDetails.gender}`;
-          result = await axios.get(filterUrl);
+          result = await axios.get(filterUrl, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
           setFilteredDoc(result.data.doctors);
         } else {
           result = await axios.get(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors/${currPageNumber}`
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors/${currPageNumber}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
           );
           setDoctors(result.data.doctors);
         }
@@ -152,7 +165,11 @@ export default function Appointments() {
       }
       setcurrDocState({ ...currDocState, isFiltered: true });
       const filterUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors/filter/1?rating=${filterDetails.rating}&experience=${filterDetails.experience}&gender=${filterDetails.gender}&searchQuery=${searchQuery}`;
-      const result: any = await axios.get(filterUrl);
+      const result: any = await axios.get(filterUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (result.data.doctors.length === 0) {
         setIsLoading(false);
         return;

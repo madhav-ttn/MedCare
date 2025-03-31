@@ -75,5 +75,21 @@ const authService = {
       };
     }
   },
+  google: async (user: any) => {
+    try {
+      if (!user) {
+        return {
+          success: false,
+          message: "GOOGLE AUTH FAILED",
+        };
+      }
+      const token = await jwt.sign(
+        { id: user.id, email: user.email, role: user.role, name: user.name },
+        process.env.JWT_SECRET || "hellojwt",
+        { expiresIn: "1d" }
+      );
+      return { success: true, token: token };
+    } catch (error) {}
+  },
 };
 export default authService;

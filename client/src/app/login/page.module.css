@@ -13,7 +13,7 @@
 .modal{
     font-weight: 500;
     width: 560px;
-    height: 614px;
+    height: 700px;
     display: flex;
     flex-direction: column;
     gap: 20px;

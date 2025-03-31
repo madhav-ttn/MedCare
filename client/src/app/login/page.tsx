@@ -140,8 +140,16 @@ export default function Login() {
           <button type="reset" onClick={() => handleReset()}>
             Reset
           </button>
-          <p>Forgot Password?</p>
+          <p>or</p>
         </Form>
+        <button
+          onClick={() =>
+            (window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/google`)
+          }
+        >
+          Login with Google
+        </button>
+        <p>Forgot Password?</p>
       </div>
     </div>
   );

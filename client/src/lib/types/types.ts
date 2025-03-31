@@ -40,7 +40,7 @@ export type Appointment = {
   patient: string;
   doctor: string;
   date: string;
-  time: string;
+  start_time: string;
   type: string;
   status: "pending" | "approved" | "declined" | "delete";
 };

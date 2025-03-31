@@ -9,7 +9,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { authContext } from "@/context/Auth/authContext";
-import { Menu, X } from "lucide-react"; // Using Lucide React icons for hamburger and close
+import { Menu, X } from "lucide-react";
 
 export default function Header() {
   const router = useRouter();
@@ -17,7 +17,6 @@ export default function Header() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  // Close sidebar when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -34,7 +33,6 @@ export default function Header() {
     };
   }, [sidebarRef]);
 
-  // Close sidebar when window is resized to larger size
   useEffect(() => {
     function handleResize() {
       if (window.innerWidth > 768) {
@@ -53,7 +51,7 @@ export default function Header() {
       const token = Cookies.get("user");
       if (!token) {
         handleAuth(null);
-        router.replace("/login");
+        // router.replace("/login");
         return;
       }
       try {
@@ -86,7 +84,7 @@ export default function Header() {
     Cookies.remove("user");
     handleAuth(null);
     router.push("/login");
-    setIsSidebarOpen(false); // Close sidebar after logout
+    setIsSidebarOpen(false);
   };
 
   const toggleSidebar = () => {
