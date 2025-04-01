@@ -5,7 +5,6 @@ import { googleAuthConfig } from "./googleAuth";
 import authModel from "../models/authModel";
 import bcrypt from "bcrypt";
 
-console.log(googleAuthConfig);
 passport.use(
   new GoogleStrategy(
     googleAuthConfig,

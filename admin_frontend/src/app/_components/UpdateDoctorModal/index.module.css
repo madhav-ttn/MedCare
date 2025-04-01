@@ -149,6 +149,13 @@
     background-color: #1b5e20;
   }
 
+  .buttonWithLoader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:10px
+  }
+
   
   @media (max-width: 600px) {
     .formRow {

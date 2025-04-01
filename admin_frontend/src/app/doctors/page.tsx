@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import CreateDoctorModal from "../_components/CreateDoctorModel";
+import PageLoader from "../_components/PageLoader";
 
 export default function DoctorsPage() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -18,6 +19,7 @@ export default function DoctorsPage() {
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
   const token = Cookies.get("user");
@@ -26,6 +28,7 @@ export default function DoctorsPage() {
   }, []);
   useEffect(() => {
     async function fetchDoctors() {
+      setIsLoading(true);
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/doctors`,
@@ -41,10 +44,15 @@ export default function DoctorsPage() {
         }
       } catch (error) {
         console.log("Error fetching doctors:", error);
+        toast.error("Failed to load doctors");
+      } finally {
+        setIsLoading(false);
       }
     }
-    fetchDoctors();
-  }, []);
+    if (token) {
+      fetchDoctors();
+    }
+  }, [token]);
 
   useEffect(() => {
     if (searchTerm.trim() === "") {
@@ -146,21 +154,25 @@ export default function DoctorsPage() {
 
       <SearchBar onSearch={handleSearch} />
 
-      <div className={styles.doctorsGrid}>
-        {filteredDoctors.length > 0 ? (
-          filteredDoctors.map((doctor) => (
-            <DoctorCard
-              key={doctor.id}
-              doctor={doctor}
-              onClick={() => handleDoctorClick(doctor)}
-            />
-          ))
-        ) : (
-          <div className={styles.noResults}>
-            No doctors found matching your search criteria.
-          </div>
-        )}
-      </div>
+      {isLoading ? (
+        <PageLoader />
+      ) : (
+        <div className={styles.doctorsGrid}>
+          {filteredDoctors.length > 0 ? (
+            filteredDoctors.map((doctor) => (
+              <DoctorCard
+                key={doctor.id}
+                doctor={doctor}
+                onClick={() => handleDoctorClick(doctor)}
+              />
+            ))
+          ) : (
+            <div className={styles.noResults}>
+              No doctors found matching your search criteria.
+            </div>
+          )}
+        </div>
+      )}
 
       {isModalOpen && selectedDoctor && (
         <UpdateDoctorModal

@@ -25,7 +25,6 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
 }
 .formContainer{
-   /* color: white; */
    display: flex;
    flex-direction: column;
    gap: 20px;
@@ -76,4 +75,15 @@
 
 .formContainer > button[type="reset"]{
     background: #C6B09A;
+}
+
+.googleButton{
+    padding: 20px 48px;
+    border-radius: 10px;
+    background-color: white;
+    color:black;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    outline: none;
 }

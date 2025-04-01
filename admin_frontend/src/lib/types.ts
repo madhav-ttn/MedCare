@@ -1,4 +1,5 @@
 import { JwtPayload } from "jsonwebtoken";
+import { ReactNode } from "react";
 
 export type Appointment = {
   id: number;
@@ -46,4 +47,10 @@ export interface jwtPayload extends JwtPayload {
   id: number;
   name: string;
   role: string;
+}
+
+export interface RedirectLinkProps {
+  href: string;
+  children: ReactNode;
+  className: string;
 }

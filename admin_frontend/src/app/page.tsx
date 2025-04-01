@@ -7,15 +7,20 @@ import { toast } from "react-toastify";
 import { Appointment } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import PageLoader from "@/app/_components/PageLoader";
+import RedirectLink from "./_components/RedirectLink";
+
 export default function Dashboard() {
   const [doctors, setDoctors] = useState([]);
   const [appointments, setAppointments] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const token = Cookies.get("user");
     if (!token) router.replace("/login");
   }, []);
+
   useEffect(() => {
     const token = Cookies.get("user");
     async function getAppointmentsandDoctors() {
@@ -45,9 +50,11 @@ export default function Dashboard() {
         if (appointmentResponse.data.appointments) {
           setAppointments(appointmentResponse.data.appointments);
         }
+        setIsLoading(false);
       } catch (error) {
         console.log("Error in getting the doctors and appointments", error);
         toast.error("Something went wrong");
+        setIsLoading(false);
       }
     }
     getAppointmentsandDoctors();
@@ -63,6 +70,13 @@ export default function Dashboard() {
 
   const recentAppointments = appointments.slice(0, 3) || [];
 
+  if (isLoading) {
+    return (
+      <div style={{ height: "100vh" }}>
+        <PageLoader />
+      </div>
+    );
+  }
   return (
     <div className={styles.dashboardGrid}>
       <div className={styles.statsContainer}>
@@ -83,15 +97,12 @@ export default function Dashboard() {
               <path d="M16 3.13a4 4 0 0 1 0 7.75" />
             </svg>
           </div>
-          <div
-            className={styles.statContent}
-            onClick={() => router.push("/doctors")}
-          >
+          <RedirectLink className={styles.statContent} href="/doctors">
             <div className={styles.statLabel}>Total Doctors</div>
             <div className={styles["statValue-doctors"]}>
               {dashboardStats.totalDoctors}
             </div>
-          </div>
+          </RedirectLink>
         </div>
 
         <div className={styles.statCard}>
@@ -111,16 +122,16 @@ export default function Dashboard() {
               <line x1="3" x2="21" y1="10" y2="10" />
             </svg>
           </div>
-          <Link href={"/appointments"} className={styles.statContent}>
+          <RedirectLink href={"/appointments"} className={styles.statContent}>
             <div className={styles.statLabel}>Total Appointments</div>
             <div className={styles["statValue-appointments"]}>
               {dashboardStats.totalAppointments}
             </div>
-          </Link>
+          </RedirectLink>
         </div>
 
         <div className={styles.statCard}>
-          <Link
+          <RedirectLink
             href={"/appointments"}
             className={styles["statIconWrapper-pending"]}
           >
@@ -136,13 +147,13 @@ export default function Dashboard() {
               <circle cx="12" cy="12" r="10" />
               <polyline points="12 6 12 12 16 14" />
             </svg>
-          </Link>
-          <Link href={"/appointments"} className={styles.statContent}>
+          </RedirectLink>
+          <RedirectLink href={"/appointments"} className={styles.statContent}>
             <div className={styles.statLabel}>Pending Appointments</div>
             <div className={styles["statValue-pending"]}>
               {dashboardStats.pendingAppointments}
             </div>
-          </Link>
+          </RedirectLink>
         </div>
       </div>
 
@@ -150,7 +161,9 @@ export default function Dashboard() {
         <div className={styles.cardSection}>
           <h2 className={styles.cardTitle}>Recent Appointments</h2>
           <div className={styles.appointmentList}>
-            {recentAppointments.length !== 0 ? (
+            {isLoading ? (
+              <PageLoader />
+            ) : recentAppointments.length !== 0 ? (
               recentAppointments.map((appointment: Appointment, index) => (
                 <div key={index} className={styles.appointmentItem}>
                   <div className={styles.appointmentDetails}>
@@ -162,7 +175,7 @@ export default function Dashboard() {
                     </span>
                   </div>
                   <span className={styles.appointmentDate}>
-                    {appointment.date}
+                    {appointment.date.split("T")[0]}
                   </span>
                 </div>
               ))
@@ -175,7 +188,7 @@ export default function Dashboard() {
         <div className={styles.cardSection}>
           <h2 className={styles.cardTitle}>Quick Actions</h2>
           <div className={styles.quickActionsGrid}>
-            <Link
+            <RedirectLink
               href="/doctors"
               className={styles["quickActionButton-doctors"]}
             >
@@ -196,8 +209,8 @@ export default function Dashboard() {
                 </svg>
               </div>
               Add Doctor
-            </Link>
-            <Link
+            </RedirectLink>
+            <RedirectLink
               href="/appointments"
               className={styles["quickActionButton-appointments"]}
             >
@@ -218,7 +231,7 @@ export default function Dashboard() {
                 </svg>
               </div>
               Manage Appointments
-            </Link>
+            </RedirectLink>
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import styles from "./index.module.css";
 import { Doctor, DoctorModalProps } from "@/lib/types";
+import Loader from "../Loader";
 
 export default function UpdateDoctorModal({
   doctor,
@@ -11,6 +12,9 @@ export default function UpdateDoctorModal({
 }: DoctorModalProps) {
   const [formData, setFormData] = useState<Doctor>(doctor);
   const [diseasesInput, setDiseasesInput] = useState<string[]>(doctor.disease);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -38,13 +42,34 @@ export default function UpdateDoctorModal({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onUpdate(formData);
+    setIsUpdating(true);
+    try {
+      await onUpdate(formData);
+    } catch (error) {
+      console.error("Error updating doctor profile:", error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleDeleteClick = async () => {
+    if (
+      window.confirm("Are you sure you want to delete this doctor profile?")
+    ) {
+      setIsDeleting(true);
+      try {
+        await handleDelete(doctor.id);
+      } catch (error) {
+        console.error("Error deleting doctor profile:", error);
+        setIsDeleting(false);
+      }
+    }
   };
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
+    if (e.target === e.currentTarget && !isUpdating && !isDeleting) {
       onClose();
     }
   };
@@ -54,7 +79,11 @@ export default function UpdateDoctorModal({
       <div className={styles.modalContent}>
         <div className={styles.modalHeader}>
           <h2 className={styles.modalTitle}>Update Doctor Profile</h2>
-          <button className={styles.closeButton} onClick={onClose}>
+          <button
+            className={styles.closeButton}
+            onClick={onClose}
+            disabled={isUpdating || isDeleting}
+          >
             &times;
           </button>
         </div>
@@ -71,6 +100,7 @@ export default function UpdateDoctorModal({
               onChange={handleChange}
               className={styles.input}
               required
+              disabled={isUpdating || isDeleting}
             />
           </div>
 
@@ -86,6 +116,7 @@ export default function UpdateDoctorModal({
               onChange={handleChange}
               className={styles.input}
               required
+              disabled={isUpdating || isDeleting}
             />
           </div>
 
@@ -103,6 +134,7 @@ export default function UpdateDoctorModal({
                 className={styles.input}
                 min="0"
                 required
+                disabled={isUpdating || isDeleting}
               />
             </div>
 
@@ -121,6 +153,7 @@ export default function UpdateDoctorModal({
                 max="5"
                 step="0.1"
                 required
+                disabled={isUpdating || isDeleting}
               />
             </div>
           </div>
@@ -137,6 +170,7 @@ export default function UpdateDoctorModal({
               onChange={handleChange}
               className={styles.input}
               required
+              disabled={isUpdating || isDeleting}
             />
           </div>
 
@@ -151,6 +185,7 @@ export default function UpdateDoctorModal({
               onChange={handleChange}
               className={styles.select}
               required
+              disabled={isUpdating || isDeleting}
             >
               <option value="MALE">Male</option>
               <option value="FEMALE">Female</option>
@@ -170,6 +205,7 @@ export default function UpdateDoctorModal({
               onChange={handleChange}
               className={styles.input}
               placeholder="https://example.com/doctor-image.jpg"
+              disabled={isUpdating || isDeleting}
             />
           </div>
 
@@ -185,6 +221,7 @@ export default function UpdateDoctorModal({
               onChange={handleChange}
               className={styles.input}
               placeholder="diabetes, thyroid, hypertension"
+              disabled={isUpdating || isDeleting}
             />
           </div>
 
@@ -192,19 +229,41 @@ export default function UpdateDoctorModal({
             <button
               type="button"
               className={styles.deleteButton}
-              onClick={() => handleDelete(doctor.id)}
+              onClick={handleDeleteClick}
+              disabled={isUpdating || isDeleting}
             >
-              Delete Profile
+              {isDeleting ? (
+                <div className={styles.buttonWithLoader}>
+                  <Loader />
+                  <span>Deleting...</span>
+                </div>
+              ) : (
+                "Delete Profile"
+              )}
             </button>
+
             <button
               type="button"
               className={styles.cancelButton}
               onClick={onClose}
+              disabled={isUpdating || isDeleting}
             >
               Cancel
             </button>
-            <button type="submit" className={styles.updateButton}>
-              Update Profile
+
+            <button
+              type="submit"
+              className={styles.updateButton}
+              disabled={isUpdating || isDeleting}
+            >
+              {isUpdating ? (
+                <div className={styles.buttonWithLoader}>
+                  <Loader />
+                  <span>Updating...</span>
+                </div>
+              ) : (
+                "Update Profile"
+              )}
             </button>
           </div>
         </form>

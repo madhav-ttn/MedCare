@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import ReqLoader from "../_components/ReqLoader";
 
 export default function Login() {
   const emailRef = useRef<HTMLInputElement | null>(null);
@@ -135,14 +136,29 @@ export default function Login() {
             />
           </div>
           <button type="submit" onClick={() => handleLogin()}>
-            {isLoading ? "Logging you in..." : "Log in"}
+            {isLoading ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <span>Logging</span>
+                <ReqLoader />
+              </div>
+            ) : (
+              "Log in"
+            )}
           </button>
+
           <button type="reset" onClick={() => handleReset()}>
             Reset
           </button>
           <p>or</p>
         </Form>
         <button
+          className={styles.googleButton}
           onClick={() =>
             (window.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/google`)
           }

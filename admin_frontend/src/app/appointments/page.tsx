@@ -6,10 +6,14 @@ import { toast } from "react-toastify";
 import { Appointment } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import PageLoader from "@/app/_components/PageLoader";
+
 export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const token = Cookies.get("user");
+
   useEffect(() => {
     if (!token) router.replace("/login");
   }, []);
@@ -17,6 +21,7 @@ export default function AppointmentsPage() {
   useEffect(() => {
     async function getData() {
       try {
+        setIsLoading(true);
         const appointmentResponse = await axios.get(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments`,
           {
@@ -31,6 +36,8 @@ export default function AppointmentsPage() {
       } catch (error) {
         console.log("Error in getting appointments", error);
         toast.error("Something went wrong");
+      } finally {
+        setIsLoading(false);
       }
     }
     getData();
@@ -58,7 +65,6 @@ export default function AppointmentsPage() {
               (appointment: Appointment) => appointment.id !== id
             )
           );
-
           toast.success("Appointment deleted successfully");
         }
       } else {
@@ -75,7 +81,6 @@ export default function AppointmentsPage() {
             },
           }
         );
-
         if (response.data.success) {
           setAppointments((prevAppointments) =>
             prevAppointments.map((appointment: Appointment) =>
@@ -87,7 +92,6 @@ export default function AppointmentsPage() {
                 : appointment
             )
           );
-
           toast.success(
             `Appointment ${
               action === "approve" ? "approved" : "declined"
@@ -104,79 +108,83 @@ export default function AppointmentsPage() {
   return (
     <div className={styles.appointmentsContainer}>
       <h1 className={styles.pageTitle}>Appointment Requests</h1>
-      <div className={styles.appointmentTable}>
-        <div className={styles.tableHeader}>
-          <div>Patient</div>
-          <div>Doctor</div>
-          <div>Date</div>
-          <div>Time</div>
-          <div>Type</div>
-          <div>Status</div>
-          <div>Actions</div>
-        </div>
-        {appointments.map((appointment: Appointment) => (
-          <div key={appointment.id} className={styles.tableRow}>
-            <div>{appointment.patient}</div>
-            <div>{appointment.doctor}</div>
-            <div>{appointment.date.split("T")[0]}</div>
-            <div>
-              {appointment.time.slice(0, 5)}{" "}
-              {parseInt(appointment.time.slice(0, 2)) >= 12 ? "PM" : "AM"}
-            </div>
-            <div>{appointment.type}</div>
-            <div className={styles[`status-${appointment.status}`]}>
-              {appointment.status}
-            </div>
-            <div className={styles.actionButtons}>
-              {appointment.status === "approved" ||
-              appointment.status === "declined" ? (
-                <button
-                  onClick={() =>
-                    handleAppointmentAction(
-                      appointment.id,
-                      appointment.doctor_id,
-                      appointment.slot_id,
-                      "delete"
-                    )
-                  }
-                  className={styles.declineButton}
-                >
-                  Delete
-                </button>
-              ) : (
-                <>
+      {isLoading ? (
+        <PageLoader />
+      ) : (
+        <div className={styles.appointmentTable}>
+          <div className={styles.tableHeader}>
+            <div>Patient</div>
+            <div>Doctor</div>
+            <div>Date</div>
+            <div>Time</div>
+            <div>Type</div>
+            <div>Status</div>
+            <div>Actions</div>
+          </div>
+          {appointments.map((appointment: Appointment) => (
+            <div key={appointment.id} className={styles.tableRow}>
+              <div>{appointment.patient}</div>
+              <div>{appointment.doctor}</div>
+              <div>{appointment.date.split("T")[0]}</div>
+              <div>
+                {appointment.time.slice(0, 5)}{" "}
+                {parseInt(appointment.time.slice(0, 2)) >= 12 ? "PM" : "AM"}
+              </div>
+              <div>{appointment.type}</div>
+              <div className={styles[`status-${appointment.status}`]}>
+                {appointment.status}
+              </div>
+              <div className={styles.actionButtons}>
+                {appointment.status === "approved" ||
+                appointment.status === "declined" ? (
                   <button
                     onClick={() =>
                       handleAppointmentAction(
                         appointment.id,
                         appointment.doctor_id,
                         appointment.slot_id,
-                        "approve"
-                      )
-                    }
-                    className={styles.approveButton}
-                  >
-                    Approve
-                  </button>
-                  <button
-                    onClick={() =>
-                      handleAppointmentAction(
-                        appointment.id,
-                        appointment.doctor_id,
-                        appointment.slot_id,
-                        "decline"
+                        "delete"
                       )
                     }
                     className={styles.declineButton}
                   >
-                    Decline
+                    Delete
                   </button>
-                </>
-              )}
+                ) : (
+                  <>
+                    <button
+                      onClick={() =>
+                        handleAppointmentAction(
+                          appointment.id,
+                          appointment.doctor_id,
+                          appointment.slot_id,
+                          "approve"
+                        )
+                      }
+                      className={styles.approveButton}
+                    >
+                      Approve
+                    </button>
+                    <button
+                      onClick={() =>
+                        handleAppointmentAction(
+                          appointment.id,
+                          appointment.doctor_id,
+                          appointment.slot_id,
+                          "decline"
+                        )
+                      }
+                      className={styles.declineButton}
+                    >
+                      Decline
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

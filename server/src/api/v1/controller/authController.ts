@@ -61,7 +61,6 @@ router.get(
       if (!result?.success) {
         throw new Error(result?.message);
       }
-      console.log("dsvdssdvnsdjv");
       return res.redirect(
         `${process.env.FRONTEND_URL}/auth/success?token=${result.token}`
       );

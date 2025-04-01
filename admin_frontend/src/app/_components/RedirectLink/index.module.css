@@ -1,0 +1,11 @@
+.quickActionButton-doctors {
+    composes: quickActionButton;
+    background-color: #e6f3e6;
+    color: #2a6b35;
+}
+.quickActionButton-appointments {
+    composes: quickActionButton;
+    background-color: #e6f0f7;
+    color: #2563eb;
+}
+  

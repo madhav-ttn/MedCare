@@ -8,6 +8,7 @@ import { useContext, useEffect } from "react";
 import { LogOutIcon } from "lucide-react";
 import axios from "axios";
 import { authContext } from "@/context/Auth/authContext";
+import RedirectLink from "../RedirectLink";
 
 export default function Header() {
   const { admin, handleAuth } = useContext(authContext);
@@ -65,10 +66,10 @@ export default function Header() {
         </div>
       </div>
       <div className={styles.buttonContainer}>
-        <Link className={styles.buttons} href={admin ? "/" : "/login"}>
+        <RedirectLink className={styles.buttons} href={admin ? "/" : "/login"}>
           {admin ? `Hi, ${admin.name as string} ` : `Login`}
           {admin && <LogOutIcon onClick={() => handleLogout()} />}
-        </Link>
+        </RedirectLink>
       </div>
     </header>
   );

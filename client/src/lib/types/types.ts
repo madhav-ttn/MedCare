@@ -1,5 +1,4 @@
 import { JwtPayload } from "jsonwebtoken";
-import { SetStateAction } from "react";
 
 export interface SideCardProps {
   title: string;
@@ -30,11 +29,6 @@ export interface Slot {
   location: string;
 }
 
-export interface NavLinkProps {
-  href: string;
-  label: string;
-  handleSidebar?: () => void;
-}
 export type Appointment = {
   id: string;
   patient: string;
@@ -44,6 +38,11 @@ export type Appointment = {
   type: string;
   status: "pending" | "approved" | "declined" | "delete";
 };
+export interface NavLinkProps {
+  href: string;
+  label: string;
+  handleSidebar?: () => void;
+}
 
 export interface RedirectLinkProps extends NavLinkProps {
   className: string;
