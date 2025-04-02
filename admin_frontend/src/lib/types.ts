@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 export type Appointment = {
   id: number;
   patient: string;
+  patientemail: string;
   doctor: string;
   doctor_id: number;
   slot_id: number;

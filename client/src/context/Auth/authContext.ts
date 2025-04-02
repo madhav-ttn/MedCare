@@ -2,7 +2,11 @@
 import { jwtPayload } from "@/lib/types/types";
 import { createContext } from "react";
 
-export const authContext = createContext({
-  user: null,
-  handleAuth: (user: jwtPayload | null) => {},
-});
+interface AuthInterface {
+  user: jwtPayload | null;
+  token: string | null;
+  login: (token: string, userData: jwtPayload) => void;
+  logout: () => void;
+}
+
+export const authContext = createContext<AuthInterface | undefined>(undefined);

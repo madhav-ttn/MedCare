@@ -187,8 +187,6 @@ router.post(
 router.put(
   "/doctorProfile/:id",
   validateUser,
-  //@ts-ignore
-  validateAdmin,
   async (req: Request, res: Response): Promise<any> => {
     try {
       const { id } = req.params;

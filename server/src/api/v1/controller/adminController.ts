@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import authService from "../services/authService";
-import validateUser from "../middlewares/userMiddleware";
 
 const router = express.Router();
 
@@ -56,7 +55,9 @@ router.get(
           .json({ success: false, message: "Invalid token" });
       }
       const decodedValue = await jwt.decode(token);
-      return res.status(200).json({ success: true, admin: decodedValue });
+      return res
+        .status(200)
+        .json({ success: true, admin: decodedValue, token: token });
     } catch (error) {
       console.log("Error in verifying token", error);
       return res

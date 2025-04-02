@@ -30,7 +30,7 @@ export default function Appointments() {
     isSearched: false,
   });
   const router = useRouter();
-  const token = Cookies.get("user");
+  const token = Cookies.get("token");
   useEffect(() => {
     setIsLoading(true);
     if (!token) router.push("/login");

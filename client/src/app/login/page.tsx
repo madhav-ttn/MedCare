@@ -5,29 +5,32 @@ import Form from "next/form";
 import Image from "next/image";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useEffect, useRef, useState } from "react";
-import Cookies from "js-cookie";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import ReqLoader from "../_components/ReqLoader";
+import Cookies from "js-cookie";
+import { authContext } from "@/context/Auth/authContext";
 
 export default function Login() {
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
+  //@ts-ignore
+  const { login, user, token } = useContext(authContext);
   const router = useRouter();
-
-  useEffect(() => {
-    if (Cookies.get("user")) {
-      router.replace("/");
-    }
-  }, []);
 
   const handleReset = () => {
     if (emailRef && emailRef.current) emailRef.current.value = "";
     if (passwordRef && passwordRef.current) passwordRef.current.value = "";
   };
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      router.replace("/");
+    }
+  }, []);
 
   const handleLogin = async () => {
     try {
@@ -39,7 +42,7 @@ export default function Login() {
         setIsLoading(false);
         return;
       }
-      if (!email?.endsWith("@gmail.com")) {
+      if (!email?.endsWith("@gmail.com") && !email?.endsWith("@tothenew.com")) {
         toast.info("Enter valid email");
         return;
       }
@@ -53,7 +56,7 @@ export default function Login() {
       const token = res.data.token as string;
 
       if (token.startsWith("Bearer")) {
-        Cookies.set("user", token.split(" ")[1], { expires: 1 });
+        login(token.split(" ")[1], JSON.stringify(res.data.user));
         toast.success("Login Successfull", {
           position: "top-right",
         });

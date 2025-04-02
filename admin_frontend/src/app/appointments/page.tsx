@@ -45,6 +45,9 @@ export default function AppointmentsPage() {
 
   const handleAppointmentAction = async (
     id: number,
+    patientemail: string,
+    patientName: string,
+    appointmentDate: string,
     doctor_id: number,
     slot_id: number,
     action: "approve" | "decline" | "delete"
@@ -52,7 +55,7 @@ export default function AppointmentsPage() {
     try {
       if (action === "delete") {
         const response = await axios.delete(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments/${id}`,
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments/${id}/${slot_id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -72,6 +75,9 @@ export default function AppointmentsPage() {
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments/${id}`,
           {
             status: action === "approve" ? "approved" : "declined",
+            patientEmail: patientemail,
+            patientName: patientName,
+            appointmentDate: appointmentDate,
             doctor_id: doctor_id,
             slot_id: slot_id,
           },
@@ -141,6 +147,9 @@ export default function AppointmentsPage() {
                     onClick={() =>
                       handleAppointmentAction(
                         appointment.id,
+                        appointment.patientemail,
+                        appointment.patient,
+                        appointment.date,
                         appointment.doctor_id,
                         appointment.slot_id,
                         "delete"
@@ -156,6 +165,9 @@ export default function AppointmentsPage() {
                       onClick={() =>
                         handleAppointmentAction(
                           appointment.id,
+                          appointment.patientemail,
+                          appointment.patient,
+                          appointment.date,
                           appointment.doctor_id,
                           appointment.slot_id,
                           "approve"
@@ -169,6 +181,9 @@ export default function AppointmentsPage() {
                       onClick={() =>
                         handleAppointmentAction(
                           appointment.id,
+                          appointment.patientemail,
+                          appointment.patient,
+                          appointment.date,
                           appointment.doctor_id,
                           appointment.slot_id,
                           "decline"

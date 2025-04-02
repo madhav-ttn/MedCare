@@ -15,8 +15,8 @@ export default function Schedule() {
   const [appointmentType, setAppointmentType] = useState<
     "virtual" | "in_person"
   >("virtual");
-
-  const { user, handleAuth } = useContext(authContext);
+  //@ts-ignore
+  const { user } = useContext(authContext);
   const [currDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -33,7 +33,28 @@ export default function Schedule() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const path = usePathname();
-  const token = Cookies.get("user");
+  const token = Cookies.get("token");
+  const userData = Cookies.get("user");
+  let finalUser = null;
+  if (userData) {
+    try {
+      const decodedUserData = decodeURIComponent(userData);
+      console.log("Decoded user data:", decodedUserData);
+
+      const parsedUser = JSON.parse(decodedUserData);
+
+      finalUser =
+        typeof parsedUser === "string" ? JSON.parse(parsedUser) : parsedUser;
+
+      console.log("Final user object:", finalUser);
+      console.log("Name:", finalUser.name);
+      console.log("Role:", finalUser.role);
+    } catch (e) {
+      console.error("Error parsing user data:", e);
+    }
+  } else {
+    console.log("User data is not available");
+  }
   useEffect(() => {
     async function getDoctorData() {
       try {
@@ -98,7 +119,7 @@ export default function Schedule() {
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments`,
         {
           doctor_id: slotData.morningSlots[0].doctor_id,
-          patient_id: user?.id,
+          patient_id: finalUser?.id,
           doctor_slot_id: selectedSlot,
           appointment_date: selectedDate,
           type: appointmentType,

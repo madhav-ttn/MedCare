@@ -30,7 +30,7 @@ function getDoctorMap() {
   map.set("3-5 years", [3, 5]);
   map.set("5-10 years", [5, 10]);
   map.set("10-15 years", [10, 15]);
-  map.set("15+ years", [15]);
+  map.set("15  years", [15]);
 
   map.set("male", "MALE");
   map.set("female", "FEMALE");
@@ -55,21 +55,6 @@ export const doctorService = {
       };
     }
   },
-  // getTopDoctors: async () => {
-  //   try {
-  //     const doctors = await doctorModel.getTopDoctors();
-  //     return {
-  //       success: true,
-  //       data: doctors.data,
-  //     };
-  //   } catch (error) {
-  //     console.log("Error in getting top doctors", error);
-  //     return {
-  //       success: false,
-  //       message: "Error in getting top doctors",
-  //     };
-  //   }
-  // },
   getFilteredDoctors: async (
     rating: string,
     experience: string,
@@ -79,6 +64,7 @@ export const doctorService = {
   ) => {
     try {
       const mp = getDoctorMap();
+      console.log(mp.get(experience));
       const details = {
         rating: mp.get(rating),
         experience: mp.get(experience),

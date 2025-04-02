@@ -1,8 +1,13 @@
 "use client";
-import { jwtPayload } from "@/lib/types";
 import { createContext } from "react";
+import { jwtPayload } from "@/lib/types";
 
-export const authContext = createContext({
+interface AuthContextType {
+  admin: jwtPayload | null;
+  handleAuth: (userData: jwtPayload | null) => void;
+}
+
+export const authContext = createContext<AuthContextType>({
   admin: null,
-  handleAuth: (admin: jwtPayload | null) => {},
+  handleAuth: () => {},
 });

@@ -11,7 +11,6 @@ export default function UserProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    //@ts-ignore
     <authContext.Provider value={{ admin, handleAuth }}>
       {children}
     </authContext.Provider>

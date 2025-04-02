@@ -5,17 +5,39 @@ import NavLink from "../Navlink";
 import RedirectLink from "../RedirectLink";
 import Link from "next/link";
 import { useContext, useEffect, useState, useRef } from "react";
-import Cookies from "js-cookie";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { authContext } from "@/context/Auth/authContext";
 import { Menu, X } from "lucide-react";
+import Cookies from "js-cookie";
 
 export default function Header() {
   const router = useRouter();
-  const { user, handleAuth } = useContext(authContext);
+  //@ts-ignore
+  const { user, token, login, logout } = useContext(authContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
+
+  const userData = Cookies.get("user");
+  let finalUser = null;
+  if (userData) {
+    try {
+      const decodedUserData = decodeURIComponent(userData);
+      console.log("Decoded user data:", decodedUserData);
+
+      const parsedUser = JSON.parse(decodedUserData);
+
+      finalUser =
+        typeof parsedUser === "string" ? JSON.parse(parsedUser) : parsedUser;
+
+      console.log("Final user object:", finalUser);
+      console.log("Name:", finalUser.name);
+      console.log("Role:", finalUser.role);
+    } catch (e) {
+      console.error("Error parsing user data:", e);
+    }
+  } else {
+    console.log("User data is not available");
+  }
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -33,56 +55,44 @@ export default function Header() {
     };
   }, [sidebarRef]);
 
-  useEffect(() => {
-    function handleResize() {
-      if (window.innerWidth > 768) {
-        setIsSidebarOpen(false);
-      }
-    }
+  // useEffect(() => {
+  //   async function verifyTokenAndGetUser() {
+  //     const token = Cookies.get("token");
+  //     if (!token) {
+  //       logout();
+  //       router.replace("/login");
+  //       return;
+  //     }
 
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  //     try {
+  //       const res: {
+  //         data: { token: string; success: boolean; admin: jwtPayload };
+  //       } = await axios.get(
+  //         `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/admin/verifyToken`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         }
+  //       );
 
-  useEffect(() => {
-    async function verifyTokenAndGetUser() {
-      const token = Cookies.get("user");
-      if (!token) {
-        handleAuth(null);
-        // router.replace("/login");
-        return;
-      }
-      try {
-        const res: any = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/admin/verifyToken`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log(res.data);
-        if (res.data.success) {
-          handleAuth(res.data.admin);
-        } else {
-          handleAuth(null);
-          Cookies.remove("user");
-        }
-      } catch (error) {
-        console.error("Token verification failed:", error);
-        Cookies.remove("user");
-        handleAuth(null);
-        router.replace("/login");
-      }
-    }
-    verifyTokenAndGetUser();
-  }, []);
+  //       if (res.data.success) {
+  //         login(res.data.token.split(" ")[1], res.data.admin);
+  //       } else {
+  //         console.log("logout");
+  //         handleLogout();
+  //       }
+  //     } catch (error) {
+  //       console.error("Token verification failed:", error);
+  //       handleLogout();
+  //     }
+  //   }
+
+  //   verifyTokenAndGetUser();
+  // }, []);
 
   const handleLogout = () => {
-    Cookies.remove("user");
-    handleAuth(null);
+    logout();
     router.push("/login");
     setIsSidebarOpen(false);
   };
@@ -117,7 +127,7 @@ export default function Header() {
             <RedirectLink
               href="/profile"
               className="registerButton"
-              label={`${user.name}`}
+              label={finalUser?.name}
             />
             <button
               className={styles.logoutButton}
@@ -196,12 +206,12 @@ export default function Header() {
             </nav>
 
             <div className={styles.sidebarAuth}>
-              {user ? (
+              {token ? (
                 <div className={styles.sidebarButtons}>
                   <RedirectLink
                     href="/profile"
                     className="registerButton"
-                    label={`${user.name}`}
+                    label={finalUser?.name}
                   />
                   <button
                     className={styles.logoutButton}

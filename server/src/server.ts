@@ -17,11 +17,4 @@ app.use(express.json());
 app.use("/api", apiRoutes);
 
 const port = process.env.PORT || 8001;
-app.listen(port, async () => {
-  try {
-    await pool.connect();
-    console.log(`Server is running at port ${port}`);
-  } catch (error) {
-    console.log("Error connecting to database:", error);
-  }
-});
+app.listen(port, () => console.log(`Server is running at port ${port}`));

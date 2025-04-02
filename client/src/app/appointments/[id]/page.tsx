@@ -23,7 +23,7 @@ export default function DoctorProfile() {
   const router = useRouter();
   const [doctor, setDoctor] = useState<Doctor>();
   const path = usePathname();
-  const token = Cookies.get("user");
+  const token = Cookies.get("token");
 
   useEffect(() => {
     async function getDoctorData() {

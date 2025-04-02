@@ -18,6 +18,7 @@ router.post("/login", async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       success: true,
       token: `Bearer ${response.token}`,
+      user: response.user,
       message: "User Login successfull",
     });
   } catch (error) {

@@ -30,7 +30,7 @@ const appointmentModel = {
   getAllAppointments: async () => {
     try {
       const result = await pool.query(
-        "SELECT ap.id as id,ap.status as status,us.name as Patient,doc.id as doctor_id, doc.name as Doctor,ds.id as slot_id, ds.date as Date,ds.start_time as Time,ap.type as Type from appointments as ap JOIN users as us on ap.patient_id = us.id JOIN doctors as doc on ap.doctor_id=doc.id JOIN doctor_slots as ds on ap.doctor_slot_id=ds.id"
+        "SELECT ap.appointment_date as appointmentDate,ap.id as id,ap.status as status,us.email as patientEmail,us.name as Patient,doc.id as doctor_id, doc.name as Doctor,ds.id as slot_id, ds.date as Date,ds.start_time as Time,ap.type as Type from appointments as ap JOIN users as us on ap.patient_id = us.id JOIN doctors as doc on ap.doctor_id=doc.id JOIN doctor_slots as ds on ap.doctor_slot_id=ds.id"
       );
       return {
         success: true,
@@ -105,11 +105,15 @@ const appointmentModel = {
       };
     }
   },
-  deleteAppointment: async (id: number) => {
+  deleteAppointment: async (id: number, slot_id: number) => {
     try {
       const result = await pool.query(
         "DELETE from appointments where id=$1 returning *",
         [id]
+      );
+      await pool.query(
+        "Update doctor_slots set is_available = true where id=$1",
+        [slot_id]
       );
       return {
         success: true,

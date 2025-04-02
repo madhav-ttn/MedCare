@@ -20,7 +20,7 @@ export default function Signup() {
   const router = useRouter();
 
   useEffect(() => {
-    if (Cookies.get("user")) {
+    if (Cookies.get("token")) {
       router.replace("/");
     }
   }, []);

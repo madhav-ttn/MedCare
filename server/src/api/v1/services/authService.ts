@@ -65,6 +65,7 @@ const authService = {
         return {
           success: true,
           token: token,
+          user: response.user,
           message: "Login Successfull",
         };
     } catch (error) {
@@ -88,7 +89,7 @@ const authService = {
         process.env.JWT_SECRET || "hellojwt",
         { expiresIn: "1d" }
       );
-      return { success: true, token: token };
+      return { success: true, token: token, user: user };
     } catch (error) {}
   },
 };

@@ -1,29 +1,48 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Appointment } from "@/lib/types/types";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { authContext } from "@/context/Auth/authContext";
 import Loader from "../_components/Loader";
 export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useContext(authContext);
   const router = useRouter();
-  const token = Cookies.get("user");
+  const token = Cookies.get("token");
   useEffect(() => {
     if (!token) router.replace("/login");
   }, []);
+  const userData = Cookies.get("user");
+  let finalUser: any = null;
+  if (userData) {
+    try {
+      const decodedUserData = decodeURIComponent(userData);
+      console.log("Decoded user data:", decodedUserData);
+
+      const parsedUser = JSON.parse(decodedUserData);
+
+      finalUser =
+        typeof parsedUser === "string" ? JSON.parse(parsedUser) : parsedUser;
+
+      console.log("Final user object:", finalUser);
+      console.log("Name:", finalUser.name);
+      console.log("Role:", finalUser.role);
+    } catch (e) {
+      console.error("Error parsing user data:", e);
+    }
+  } else {
+    console.log("User data is not available");
+  }
   useEffect(() => {
     async function getData() {
       try {
         setIsLoading(true);
         const appointmentResponse: any = await axios.get(
           //@ts-ignore
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments/patient/${user?.id}`,
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/appointments/patient/${finalUser?.id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
