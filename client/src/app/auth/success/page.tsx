@@ -13,11 +13,14 @@ export default function Success() {
 
   useEffect(() => {
     const token = searchParams.get("token");
-    if (!token) {
+    const user = searchParams.get("user");
+    if (!token || !user) {
       router.push("/login");
       return;
     }
-    Cookies.set("user", token);
+    Cookies.set("token", token);
+    Cookies.set("user", user);
+
     if (timeCounter) clearTimeout(timeCounter);
     let interval = setInterval(() => {
       setTimer((prev: number) => {

@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import authService from "../services/authService";
 import { passport } from "../config/passport";
+import jwt from "jsonwebtoken";
 const router = express.Router();
 
 router.post("/login", async (req: Request, res: Response): Promise<any> => {
@@ -62,8 +63,13 @@ router.get(
       if (!result?.success) {
         throw new Error(result?.message);
       }
+      if (!result.token) {
+        return res.status(400).json({ message: "Token not found" });
+      }
+      const decodedUser = await jwt.decode(result.token);
+      const userString = JSON.stringify(decodedUser);
       return res.redirect(
-        `${process.env.FRONTEND_URL}/auth/success?token=${result.token}`
+        `${process.env.FRONTEND_URL}/auth/success?token=${result.token}&user=${userString}`
       );
     } catch (error) {
       console.log("Error in google callback", error);
